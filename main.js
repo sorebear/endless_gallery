@@ -166,22 +166,6 @@ function Painting() {
     this.paintingID = null;
 
     /**
-     * Method to determine if paintingImage is portrait or landscape
-     * @returns {string}
-     */
-    this.isImagePortraitOrLandscape = function(img) {
-        var width = img[0].width;
-        var height = img[0].height;
-        if (height > width) {
-            console.log('Portrait');
-            return 'portrait'
-        } else {
-            console.log('Landscape');
-            return 'landscape'
-        }
-    };
-
-    /**
      * Method to set Painting Size
      * @param {string} image URL
      * @return {string} with the section surrounded by curly braces replaced with 'Large'
@@ -193,14 +177,7 @@ function Painting() {
      * @Param {string, string} What image to target and where to append the DOM image to
      */
     this.createImageDOM = function(targetImage, appendTarget) {
-        var newImage = $('<img>').attr('src', targetImage);
-        $(appendTarget).append(newImage);
-        var orientation = this.isImagePortraitOrLandscape(newImage);
-        if (orientation === 'portrait') {
-            newImage.css('height', '100%');
-        } else {
-            newImage.css('width', '100%');
-        }
+        $(appendTarget).css('background-image', 'url(' + targetImage +')');
     };
 
     /*

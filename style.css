@@ -16,9 +16,20 @@
 }
 
 .painting_container_div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 60vmin;
     height: 60vmin;
     background-color: #0d69a3;
+}
+
+.painting_div {
+    width: 50vmin;
+    height: 50vmin;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .map_container_div {
