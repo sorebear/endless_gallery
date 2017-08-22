@@ -1,3 +1,5 @@
+var testOjbect = {};
+
 /**
  * Global Variable to store all previously generated Painting Objects
  * @Global {Array} of {Objects}
@@ -182,27 +184,18 @@ function Painting() {
     this.paintingID = null;
 
     /**
-     * Method to determine if paintingImage is portrait or landscape
-     * @returns {string}
+     * Method to set Painting Size
+     * @param {string} image URL
+     * @return {string} with the section surrounded by curly braces replaced with 'Large'
      */
-    this.isImagePortraitOrLandscape = function() {
-        var width = this.artistImage[0].width;
-        var height = this.artistImage[0].height;
-        if (height > width) {
-            console.log('Portrait');
-            return 'portrait'
-        } else {
-            console.log('Landscape');
-            return 'landscape'
-        }
-    };
+
 
     /**
      * Method to create a DOM image
      * @Param {string, string} What image to target and where to append the DOM image to
      */
     this.createImageDOM = function(targetImage, appendTarget) {
-
+        $(appendTarget).css('background-image', 'url(' + targetImage +')');
     };
 
     /*
