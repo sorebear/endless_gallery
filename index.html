@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+    <script>
+        $.ajax({ //Random artwork lookup
+            url: "https://api.artsy.net/api/artworks?sample",
+            method: "GET",
+            dataType: "json",
+            headers: {
+                "X-Xapp-Token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6IiIsImV4cCI6MTUwMzk0NzkxNiwiaWF0IjoxNTAzMzQzMTE2LCJhdWQiOiI1OTliMzIwYzljMThkYjZmNzlkN2ViNmYiLCJpc3MiOiJHcmF2aXR5IiwianRpIjoiNTk5YjMyMGNhMDlhNjcxN2RhYjdiZmIyIn0.kN3DSO2Ppf1o6kbAJ6lkQw_TCSCxIAoWxjc9en2WXNE",
+            },
+            success: successFunction,
+            error: errorFunction
+        });
+
+        $.ajax({  //Artist Lookup
+            url: "https://api.artsy.net/api/artists?sample",
+            method: "GET",
+            dataType: "json",
+            data: {
+                "artwork_id": "516ca55d078b32147800075c"
+            },
+            headers: {
+                "X-Xapp-Token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6IiIsImV4cCI6MTUwMzk0NzkxNiwiaWF0IjoxNTAzMzQzMTE2LCJhdWQiOiI1OTliMzIwYzljMThkYjZmNzlkN2ViNmYiLCJpc3MiOiJHcmF2aXR5IiwianRpIjoiNTk5YjMyMGNhMDlhNjcxN2RhYjdiZmIyIn0.kN3DSO2Ppf1o6kbAJ6lkQw_TCSCxIAoWxjc9en2WXNE",
+            },
+            success: successFunction,
+            error: errorFunction
+        });
+
+        $.ajax({ //Geocoding API
+            url: "https://maps.googleapis.com/maps/api/geocode/json",
+            method: "GET",
+            dataType: "json",
+            data: {
+                address: "The+White+House",
+                key: "AIzaSyAaECqfgaoi_qM2RBsq8VYAuuFevWg3bhg"
+            },
+            success: successFunction,
+            error: errorFunction
+        });
+
+
+        $.ajax({ //get first passage of Wikipedia of Artist
+            url: "https://en.wikipedia.org/w/api.php",
+            method: "GET",
+            dataType: "jsonp",
+            data: {
+                action: "query",
+                titles: "Vincent van Gogh",
+                format: "json",
+                prop: "extracts",
+                exintro: true,
+                explaintext: true
+            },
+            success: successFunction,
+            error: errorFunction
+        });
+
+        function successFunction (response) {
+            console.log(response);
+        }
+        function errorFunction(){
+            console.log("whoops");
+        }
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>
