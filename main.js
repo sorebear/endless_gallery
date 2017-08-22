@@ -1,5 +1,3 @@
-var testOjbect = {};
-
 /**
  * Global Variable to store all previously generated Painting Objects
  * @Global {Array} of {Objects}
@@ -198,6 +196,13 @@ function Painting() {
         $(appendTarget).css('background-image', 'url(' + targetImage +')');
     };
 
+    /**
+     * Method that calls all of the Methods to add DOM elements to the page
+     */
+    this.populatePage = function() {
+        this.createImageDOM(this.paintingImage, '.painting_div');
+        this.createImageDOM(this.artistImage, '.artist_container_div');
+    };
     /*
      * Method to take in a string and return it with all instances of "x" replaced with "y"
      * @param {string, string, string}
