@@ -1,9 +1,19 @@
+button {
+    position: fixed;
+}
+
 .content_container {
-    width: 98vw;
-    height: 98vh;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.gallery_wall {
+    position: absolute;
+    top: 0;
+    height: 100vh;
+    background-image: url(assets/images/vintage-concrete.png);
+
 }
 
 .gallery_container_div {
@@ -21,7 +31,8 @@
     justify-content: center;
     width: 60vmin;
     height: 60vmin;
-    background-color: #0d69a3;
+    background-image: url(assets/images/whiteFrame.jpg);
+    background-size: contain;
 }
 
 .painting_div {
@@ -41,6 +52,8 @@
 .artist_container_div {
     width: 30vmin;
     height: 30vmin;
+    background-size: contain;
+    background-repeat: no-repeat;
     background-color: grey;
 }
 
