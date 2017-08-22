@@ -5,12 +5,6 @@
 var allPaintings = [];
 
 /**
- * Global Variable to store all previously Painting Objects viewed by the user
- * @Global {Array} of {Objects}
- */
-var allViewedPaintings = [];
-
-/**
  * AJAX call to Artsy to receive random artwork with information
  * @param {string} "sample" and requires XAPP token
  * @return {JSON} Paiting image, painting title, painting ID, and gallery name (with conditional to check if empty)
@@ -38,11 +32,11 @@ function getPaintingArtist(response) {
         return getNewPainting();
     }
     var painting = new Painting();
-    allPaintings.unshift(painting);
-    allPaintings[0].paintingID = response.id;
-    allPaintings[0].paintingTitle = response.title;
-    allPaintings[0].paintingImage = allPaintings[0].setPaintingSize(response._links.image.href, "large");
-    allPaintings[0].paintingGallery = response.collecting_institution;
+    allPaintings.push(painting);
+    allPaintings[allPaintings.length - 1].paintingID = response.id;
+    allPaintings[allPaintings.length - 1].paintingTitle = response.title;
+    allPaintings[allPaintings.length - 1].paintingImage = allPaintings[allPaintings.length - 1].setPaintingSize(response._links.image.href, "large");
+    allPaintings[allPaintings.length - 1].paintingGallery = response.collecting_institution;
     $.ajax({  //Artist Lookup
         url: "https://api.artsy.net/api/artists?sample",
         method: "GET",
@@ -64,14 +58,14 @@ function getPaintingArtist(response) {
  * @return {number} Latitude and Longitude of the gallery
  */
 function getGalleryLocation(response) {
-    allPaintings[0].artistImage = allPaintings[0].setPaintingSize(response._links.image.href, "square");
-    allPaintings[0].artistName = response.name;
+    allPaintings[allPaintings.length - 1].artistImage = allPaintings[allPaintings.length - 1].setPaintingSize(response._links.image.href, "square");
+    allPaintings[allPaintings.length - 1].artistName = response.name;
     $.ajax({ //Geocoding API
         url: "https://maps.googleapis.com/maps/api/geocode/json",
         method: "GET",
         dataType: "json",
         data: {
-            address: allPaintings[0].replaceXwithY(allPaintings[0].paintingGallery, " ", "+"),
+            address: allPaintings[allPaintings.length - 1].replaceXwithY(allPaintings[allPaintings.length - 1].paintingGallery, " ", "+"),
             key: "AIzaSyAaECqfgaoi_qM2RBsq8VYAuuFevWg3bhg"
         },
         success: getArtistBio,
@@ -103,15 +97,15 @@ function getGalleryMap(lat, long){
  * @return {JSON} Artist's short biography from Wikipedia
  */
 function getArtistBio(response) {
-    allPaintings[0].galleryCoordinates.latitude = response.results[0].geometry.location.lat;
-    allPaintings[0].galleryCoordinates.longitude = response.results[0].geometry.location.lng;
+    allPaintings[allPaintings.length - 1].galleryCoordinates.latitude = response.results[allPaintings.length - 1].geometry.location.lat;
+    allPaintings[allPaintings.length - 1].galleryCoordinates.longitude = response.results[allPaintings.length - 1].geometry.location.lng;
     $.ajax({ //get first passage of Wikipedia of Artist
         url: "https://en.wikipedia.org/w/api.php",
         method: "GET",
         dataType: "jsonp",
         data: {
             action: "query",
-            titles: allPaintings[0].artistName,
+            titles: allPaintings[allPaintings.length - 1].artistName,
             format: "json",
             prop: "extracts",
             exintro: true,
@@ -124,8 +118,8 @@ function getArtistBio(response) {
 
 function successFunction (response) {
     var pageKey = Object.keys(response.query.pages);
-    allPaintings[0].artistBiography = response.query.pages[pageKey[0]].extract;
-    allPaintings[0].populatePage();
+    allPaintings[allPaintings.length - 1].artistBiography = response.query.pages[pageKey[0]].extract;
+    allPaintings[allPaintings.length - 1].populatePage();
 }
 function errorFunction(){
     console.log("whoops");
@@ -182,6 +176,11 @@ function Painting() {
     this.paintingID = null;
 
     /**
+     * @private ID of the Map
+     */
+    this.paintingMap = null;
+
+    /**
      * Method to create a DOM image
      * @Param {string, string} What image to target and where to append the DOM image to
      */
@@ -198,7 +197,7 @@ function Painting() {
         $("#artistName").text(this.artistName);
         $("#artistBio").text(this.artistBiography);
         $("#artistBio").scrollTop(0);
-        var mapElement = getGalleryMap(allPaintings[0].galleryCoordinates.latitude, allPaintings[0].galleryCoordinates.longitude);
+        var mapElement = getGalleryMap(allPaintings[allPaintings.length - 1].galleryCoordinates.latitude, allPaintings[allPaintings.length - 1].galleryCoordinates.longitude);
         $(".map_container_div").append(mapElement);
     };
     /*
