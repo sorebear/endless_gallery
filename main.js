@@ -1,4 +1,3 @@
-var testOjbect = {};
 
 /**
  * Global Variable to store all previously generated Painting Objects
@@ -127,6 +126,9 @@ function getArtistBio(response) {
 function successFunction (response) {
     var pageKey = Object.keys(response.query.pages);
     allPaintings[0].artistBiography = response.query.pages[pageKey[0]].extract;
+    $("#artistName").text(allPaintings[0].artistName);
+    $("#artistBio").text(allPaintings[0].artistBiography);
+    $("#artistBio").scrollTop(0);
     console.log(allPaintings);
 }
 function errorFunction(){
