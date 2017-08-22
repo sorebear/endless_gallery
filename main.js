@@ -187,13 +187,6 @@ function Painting() {
     this.paintingID = null;
 
     /**
-     * Method to set Painting Size
-     * @param {string} image URL
-     * @return {string} with the section surrounded by curly braces replaced with 'Large'
-     */
-
-
-    /**
      * Method to create a DOM image
      * @Param {string, string} What image to target and where to append the DOM image to
      */
@@ -209,6 +202,12 @@ function Painting() {
     this.replaceXwithY = function(string, x, y) {
         return string.split(x).join(y);
     };
+
+    /*
+     * Method to take in a url in string format and return it with default image_version placeholder replaced with desired image size
+     * @param {string, string}
+     * @return {string}
+     */
     this.setPaintingSize = function(url, size) {
         return url.replace("{image_version}", size)
     }
