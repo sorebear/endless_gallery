@@ -82,8 +82,19 @@ function getGalleryLocation(response) {
 /**
  * AJAX call to Google Maps to display a map of the painting's housing gallery
  * @param {number} Latitude and Longitude of the housing gallery
- * @return undefined
+ * @return {jQuery Object} jQuery wrapped DOM element to add to container div
  */
+function getGalleryMap(lat, long){
+var urlStr = "https://www.google.com/maps/embed/v1/view?key=AIzaSyDWPRK37JSNxBhmLhEbWzCQ57MQBQu8atk&center=" + lat + "," + long + "&zoom=18&maptype=satellite";
+       var iframeElement = $('<iframe>',{
+        frameborder: "0",
+        style: "border:0",
+        src: urlStr
+    });
+    iframeElement.css({"width":"100%", "height":"100%"});
+    //$(".map_container_div").append(iframeElement);
+    return iframeElement;
+}
 
 
 /**
