@@ -86,8 +86,8 @@ function getGalleryLocation(response) {
  * @return {jQuery Object} jQuery wrapped DOM element to add to container div
  */
 function getGalleryMap(lat, long){
-var urlStr = "https://www.google.com/maps/embed/v1/view?key=AIzaSyDWPRK37JSNxBhmLhEbWzCQ57MQBQu8atk&center=" + lat + "," + long + "&zoom=18&maptype=satellite";
-       var iframeElement = $('<iframe>',{
+    var urlStr = "https://www.google.com/maps/embed/v1/view?key=AIzaSyDWPRK37JSNxBhmLhEbWzCQ57MQBQu8atk&center=" + lat + "," + long + "&zoom=18&maptype=satellite";
+    var iframeElement = $('<iframe>',{
         frameborder: "0",
         style: "border:0",
         src: urlStr
@@ -130,6 +130,7 @@ function successFunction (response) {
     $("#artistBio").text(allPaintings[0].artistBiography);
     $("#artistBio").scrollTop(0);
     console.log(allPaintings);
+    var mapElement = getGalleryMap(allPaintings[0].galleryCoordinates.latitude, allPaintings[0].galleryCoordinates.longitude);
 }
 function errorFunction(){
     console.log("whoops");
