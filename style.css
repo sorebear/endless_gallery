@@ -1,0 +1,40 @@
+.content_container {
+    width: 98vw;
+    height: 98vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.gallery_container_div {
+    height: 98vmin;
+    width: 98vmin;
+    display: flex;
+    justify-content: space-around;
+    align-content: space-around;
+    flex-flow: column wrap;
+}
+
+.painting_container_div {
+    width: 60vmin;
+    height: 60vmin;
+    background-color: #0d69a3;
+}
+
+.map_container_div {
+    width: 60vmin;
+    height: 30vmin;
+    background-color: #00de00;
+}
+
+.artist_container_div {
+    width: 30vmin;
+    height: 30vmin;
+    background-color: grey;
+}
+
+.artist_info_container_div {
+    width: 30vmin;
+    height: 60vmin;
+    background-color: crimson;
+}
