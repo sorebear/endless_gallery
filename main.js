@@ -125,11 +125,7 @@ function getArtistBio(response) {
 function successFunction (response) {
     var pageKey = Object.keys(response.query.pages);
     allPaintings[0].artistBiography = response.query.pages[pageKey[0]].extract;
-    $("#artistName").text(allPaintings[0].artistName);
-    $("#artistBio").text(allPaintings[0].artistBiography);
-    $("#artistBio").scrollTop(0);
-    console.log(allPaintings);
-    var mapElement = getGalleryMap(allPaintings[0].galleryCoordinates.latitude, allPaintings[0].galleryCoordinates.longitude);
+    allPaintings[0].populatePage();
 }
 function errorFunction(){
     console.log("whoops");
@@ -199,6 +195,11 @@ function Painting() {
     this.populatePage = function() {
         this.createImageDOM(this.paintingImage, '.painting_div');
         this.createImageDOM(this.artistImage, '.artist_container_div');
+        $("#artistName").text(this.artistName);
+        $("#artistBio").text(this.artistBiography);
+        $("#artistBio").scrollTop(0);
+        var mapElement = getGalleryMap(allPaintings[0].galleryCoordinates.latitude, allPaintings[0].galleryCoordinates.longitude);
+        $(".map_container_div").append(mapElement);
     };
     /*
      * Method to take in a string and return it with all instances of "x" replaced with "y"
