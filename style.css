@@ -61,4 +61,12 @@ button {
     width: 30vmin;
     height: 60vmin;
     background-color: crimson;
+    text-align: center;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
 }

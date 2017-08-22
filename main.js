@@ -125,8 +125,7 @@ function getArtistBio(response) {
 function successFunction (response) {
     var pageKey = Object.keys(response.query.pages);
     allPaintings[0].artistBiography = response.query.pages[pageKey[0]].extract;
-    console.log(allPaintings);
-    var mapElement = getGalleryMap(allPaintings[0].galleryCoordinates.latitude, allPaintings[0].galleryCoordinates.longitude);
+    allPaintings[0].populatePage();
 }
 function errorFunction(){
     console.log("whoops");
@@ -183,13 +182,6 @@ function Painting() {
     this.paintingID = null;
 
     /**
-     * Method to set Painting Size
-     * @param {string} image URL
-     * @return {string} with the section surrounded by curly braces replaced with 'Large'
-     */
-
-
-    /**
      * Method to create a DOM image
      * @Param {string, string} What image to target and where to append the DOM image to
      */
@@ -203,6 +195,11 @@ function Painting() {
     this.populatePage = function() {
         this.createImageDOM(this.paintingImage, '.painting_div');
         this.createImageDOM(this.artistImage, '.artist_container_div');
+        $("#artistName").text(this.artistName);
+        $("#artistBio").text(this.artistBiography);
+        $("#artistBio").scrollTop(0);
+        var mapElement = getGalleryMap(allPaintings[0].galleryCoordinates.latitude, allPaintings[0].galleryCoordinates.longitude);
+        $(".map_container_div").append(mapElement);
     };
     /*
      * Method to take in a string and return it with all instances of "x" replaced with "y"
@@ -212,6 +209,12 @@ function Painting() {
     this.replaceXwithY = function(string, x, y) {
         return string.split(x).join(y);
     };
+
+    /*
+     * Method to take in a url in string format and return it with default image_version placeholder replaced with desired image size
+     * @param {string, string}
+     * @return {string}
+     */
     this.setPaintingSize = function(url, size) {
         return url.replace("{image_version}", size)
     }
