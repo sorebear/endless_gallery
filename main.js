@@ -23,7 +23,7 @@ function getNewPainting(){
         headers: {
             "X-Xapp-Token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6IiIsImV4cCI6MTUwMzk0NzkxNiwiaWF0IjoxNTAzMzQzMTE2LCJhdWQiOiI1OTliMzIwYzljMThkYjZmNzlkN2ViNmYiLCJpc3MiOiJHcmF2aXR5IiwianRpIjoiNTk5YjMyMGNhMDlhNjcxN2RhYjdiZmIyIn0.kN3DSO2Ppf1o6kbAJ6lkQw_TCSCxIAoWxjc9en2WXNE",
         },
-        success: successFunction,
+        success: getPaintingArtist,
         error: errorFunction
     });
 }
@@ -33,18 +33,27 @@ function getNewPainting(){
  * @param {string} painting ID and XAPP token
  * @return {JSON} Artist name and artist image
  */
-function getPaintingArtist() {
+function getPaintingArtist(response) {
+    if (response.collecting_institution === "") {
+        return getNewPainting();
+    }
+    var painting = new Painting();
+    allPaintings.unshift(painting);
+    allPaintings[0].paintingID = response.id;
+    allPaintings[0].paintingTitle = response.title;
+    allPaintings[0].paintingImage = allPaintings[0].setPaintingSize(response._links.image.href, "large");
+    allPaintings[0].paintingGallery = response.collecting_institution;
     $.ajax({  //Artist Lookup
         url: "https://api.artsy.net/api/artists?sample",
         method: "GET",
         dataType: "json",
         data: {
-            "artwork_id": "516ca55d078b32147800075c"
+            "artwork_id": response.id
         },
         headers: {
             "X-Xapp-Token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6IiIsImV4cCI6MTUwMzk0NzkxNiwiaWF0IjoxNTAzMzQzMTE2LCJhdWQiOiI1OTliMzIwYzljMThkYjZmNzlkN2ViNmYiLCJpc3MiOiJHcmF2aXR5IiwianRpIjoiNTk5YjMyMGNhMDlhNjcxN2RhYjdiZmIyIn0.kN3DSO2Ppf1o6kbAJ6lkQw_TCSCxIAoWxjc9en2WXNE",
         },
-        success: successFunction,
+        success: getGalleryLocation,
         error: errorFunction
     });
 }
@@ -54,13 +63,15 @@ function getPaintingArtist() {
  * @param {string} Home gallery name
  * @return {number} Latitude and Longitude of the gallery
  */
-function getGalleryLocation() {
+function getGalleryLocation(response) {
+    allPaintings[0].artistImage = allPaintings[0].setPaintingSize(response._links.image.href, "square");
+    allPaintings[0].artistName = response.name;
     $.ajax({ //Geocoding API
         url: "https://maps.googleapis.com/maps/api/geocode/json",
         method: "GET",
         dataType: "json",
         data: {
-            address: "The+White+House",
+            address: allPaintings[0].replaceXwithY(allPaintings[0].paintingGallery, " ", "+"),
             key: "AIzaSyAaECqfgaoi_qM2RBsq8VYAuuFevWg3bhg"
         },
         success: successFunction,
@@ -183,6 +194,9 @@ function Painting() {
      */
     this.replaceXwithY = function(string, x, y) {
         return string.split(x).join(y);
+    };
+    this.setPaintingSize = function(url, size) {
+        
     }
 }
 
