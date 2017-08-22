@@ -74,7 +74,7 @@ function getGalleryLocation(response) {
             address: allPaintings[0].replaceXwithY(allPaintings[0].paintingGallery, " ", "+"),
             key: "AIzaSyAaECqfgaoi_qM2RBsq8VYAuuFevWg3bhg"
         },
-        success: successFunction,
+        success: getArtistBio,
         error: errorFunction
     });
 }
@@ -102,14 +102,16 @@ var urlStr = "https://www.google.com/maps/embed/v1/view?key=AIzaSyDWPRK37JSNxBhm
  * @param {string} Artist's name
  * @return {JSON} Artist's short biography from Wikipedia
  */
-function getArtistBio() {
+function getArtistBio(response) {
+    allPaintings[0].galleryCoordinates.latitude = response.results[0].geometry.location.lat;
+    allPaintings[0].galleryCoordinates.longitude = response.results[0].geometry.location.lng;
     $.ajax({ //get first passage of Wikipedia of Artist
         url: "https://en.wikipedia.org/w/api.php",
         method: "GET",
         dataType: "jsonp",
         data: {
             action: "query",
-            titles: "Vincent van Gogh",
+            titles: allPaintings[0].artistName,
             format: "json",
             prop: "extracts",
             exintro: true,
@@ -121,7 +123,9 @@ function getArtistBio() {
 }
 
 function successFunction (response) {
-    console.log(response);
+    var pageKey = Object.keys(response.query.pages);
+    allPaintings[0].artistBiography = response.query.pages[pageKey[0]].extract;
+    console.log(allPaintings);
 }
 function errorFunction(){
     console.log("whoops");
@@ -167,7 +171,10 @@ function Painting() {
     /**
      * @private Latitude and Longitude of the Gallery
      */
-    this.galleryCoordinates = null;
+    this.galleryCoordinates = {
+        latitude: null,
+        longitude: null
+    };
 
     /**
      * @private ID of the Painting
@@ -207,7 +214,7 @@ function Painting() {
         return string.split(x).join(y);
     };
     this.setPaintingSize = function(url, size) {
-        
+        return url.replace("{image_version}", size)
     }
 }
 
