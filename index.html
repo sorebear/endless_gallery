@@ -1,150 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link href="style.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
-    <script>
-        /**
-         * Global Variable to store all previously generated Painting Objects
-         * @Global {Array} of {Objects}
-         */
-        var allPaintings = [];
-
-        /**
-         * Global Variable to store all previously Painting Objects viewed by the user
-         * @Global {Array} of {Objects}
-         */
-        var allViewedPaintings = [];
-
-        /**
-         * AJAX call to Artsy to receive random artwork with information
-         * @param {string} "sample" and requires XAPP token
-         * @return {JSON} Painting image, painting title, painting ID, and gallery name (with conditional to check if empty)
-         */
-        $.ajax({ //Random artwork lookup
-            url: "https://api.artsy.net/api/artworks?sample",
-            method: "GET",
-            dataType: "json",
-            headers: {
-                "X-Xapp-Token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6IiIsImV4cCI6MTUwMzk0NzkxNiwiaWF0IjoxNTAzMzQzMTE2LCJhdWQiOiI1OTliMzIwYzljMThkYjZmNzlkN2ViNmYiLCJpc3MiOiJHcmF2aXR5IiwianRpIjoiNTk5YjMyMGNhMDlhNjcxN2RhYjdiZmIyIn0.kN3DSO2Ppf1o6kbAJ6lkQw_TCSCxIAoWxjc9en2WXNE",
-            },
-            success: successFunction,
-            error: errorFunction
-        });
-
-        /**
-         * AJAX call to Artsy to recieve Artist name and portrait from the painting ID
-         * @param {string} painting ID and XAPP token
-         * @return {JSON} Artist name and artist image
-         */
-        $.ajax({  //Artist Lookup
-            url: "https://api.artsy.net/api/artists?sample",
-            method: "GET",
-            dataType: "json",
-            data: {
-                "artwork_id": "516ca55d078b32147800075c"
-            },
-            headers: {
-                "X-Xapp-Token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6IiIsImV4cCI6MTUwMzk0NzkxNiwiaWF0IjoxNTAzMzQzMTE2LCJhdWQiOiI1OTliMzIwYzljMThkYjZmNzlkN2ViNmYiLCJpc3MiOiJHcmF2aXR5IiwianRpIjoiNTk5YjMyMGNhMDlhNjcxN2RhYjdiZmIyIn0.kN3DSO2Ppf1o6kbAJ6lkQw_TCSCxIAoWxjc9en2WXNE",
-            },
-            success: successFunction,
-            error: errorFunction
-        });
-
-        /**
-         * AJAX call to Google Geocoding to show the location of the home gallery
-         * @param {string} Home gallery name
-         * @return {number} Latitude and Longitude of the gallery
-         */
-        $.ajax({ //Geocoding API
-            url: "https://maps.googleapis.com/maps/api/geocode/json",
-            method: "GET",
-            dataType: "json",
-            data: {
-                address: "The+White+House",
-                key: "AIzaSyAaECqfgaoi_qM2RBsq8VYAuuFevWg3bhg"
-            },
-            success: successFunction,
-            error: errorFunction
-        });
-
-        /**
-         * AJAX call to Google Maps to display a map of the painting's housing gallery
-         * @param {number} Latitude and Longitude of the housing gallery
-         * @return undefined
-         */
-
-
-        /**
-         * AJAX call
-         * @param {string} Artist's name
-         * @return {JSON} Artist's short biography from Wikipedia
-         */
-        $.ajax({ //get first passage of Wikipedia of Artist
-            url: "https://en.wikipedia.org/w/api.php",
-            method: "GET",
-            dataType: "jsonp",
-            data: {
-                action: "query",
-                titles: "Vincent van Gogh",
-                format: "json",
-                prop: "extracts",
-                exintro: true,
-                explaintext: true
-            },
-            success: successFunction,
-            error: errorFunction
-        });
-
-        function successFunction (response) {
-            console.log(response);
-        }
-        function errorFunction(){
-            console.log("whoops");
-        }
-
-        /**
-         * Creates an instance of Painting
-         *
-         * @constructor
-         * @this {Painting}
-         */
-        function Painting() {
-            /**
-             * @Private Image of the Paiting
-             */
-            this.paintingImage = null;
-
-            /**
-             * @Private Artist Name
-             */
-            this.artistName = null;
-
-            /**
-             * @Private Artist Portrait
-             */
-            this.artistImage = null;
-
-            /**
-             * @Private Artist Bio
-             */
-            this.artistBiography = null;
-
-            /**
-             * @Private Painting Gallery
-             */
-            this.paintingGallery = null;
-
-            /**
-             * @Private Latitude and Longitude of the Gallery
-             */
-            this.galleryCoordinates = null;
-
-
-        }
-
-    </script>
+    <script src="main.js"></script>
 </head>
 <body>
+<button class="generateNewPainting">Generate New Painting</button>
+<div class="content_container">
+    <div class="gallery_container_div">
+        <div class="painting_container_div"></div>
+        <div class="map_container_div"></div>
+        <div class="artist_container_div"></div>
+        <div class="artist_info_container_div"></div>
+    </div>
+</div>
 
 </body>
 </html>
