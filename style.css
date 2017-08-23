@@ -76,7 +76,7 @@ button {
     justify-content: space-between;
     width: 100%;
 }
-#previousPainting{
-}
-#nextPainting{
+#button_ctn div{
+    border: solid 1px black;
+    border-radius: 5px;
 }
