@@ -192,17 +192,43 @@ function checkForAjaxCompletion () {
 }
 
 function previousPainting(){
-    reset("gallery_wall_2");
     if(currentPainting - 1 < 0) return;
+    var $galleryColumn = $('.gallery_column');
+    var newRotation = parseInt($galleryColumn.attr('rotation')) + 90;
+    $galleryColumn.attr('rotation', newRotation);
+    var currentFace = parseInt($galleryColumn.attr('currentFace'));
+    var faceToChange = currentFace - 1;
+    if (faceToChange < 1) {
+        faceToChange += 4;
+    }
+    rotateGallery(newRotation);
+    if (currentFace < 2) {
+        currentFace += 4;
+    }
+    $galleryColumn.attr('currentFace', (currentFace-1));
+    reset("gallery_wall_" + faceToChange);
     currentPainting--;
-    allPaintings[currentPainting].populatePage();
+    allPaintings[currentPainting].populatePage(faceToChange);
 }
 function nextPainting(){
-    reset("gallery_wall_2");
+    var $galleryColumn = $('.gallery_column');
+    var newRotation = parseInt($galleryColumn.attr('rotation')) - 90;
+    $galleryColumn.attr('rotation', newRotation);
+    var currentFace = parseInt($galleryColumn.attr('currentFace'));
+    var faceToChange = currentFace + 3;
+    if (faceToChange > 4) {
+        faceToChange -= 4;
+    }
+    rotateGallery(newRotation);
+    if (currentFace > 3) {
+        currentFace -= 4;
+    }
+    $galleryColumn.attr('currentFace', (currentFace+1));
+    reset("gallery_wall_" + faceToChange);
     paintingsRequested++;
     getNewPainting();
     currentPainting++;
-    allPaintings[currentPainting].populatePage();
+    allPaintings[currentPainting + 2].populatePage(faceToChange);
 }
 
 function errorFunction(){
@@ -284,13 +310,14 @@ function Painting() {
 
     /**
      * Method that calls all of the Methods to add DOM elements to the page
+     * @param {number} galleryWallNumber is the number of the Gallery Wall to be populated
      */
-    this.populatePage = function() {
-        this.createImageDOM(this.paintingImage, '.painting_image_div');
-        this.createImageDOM(this.artistImage, '.artist_image_div');
-        $(".artistName").text(this.artistName);
-        $(".artistBio").text(this.artistBiography).scrollTop(0);
-        $(".map_image_div").append(this.paintingMap);
+    this.populatePage = function(galleryWallNumber) {
+        this.createImageDOM(this.paintingImage, '.gallery_wall_' + galleryWallNumber + ' .painting_image_div');
+        this.createImageDOM(this.artistImage, ' .gallery_wall_' + galleryWallNumber + ' .artist_image_div');
+        $(".gallery_wall_" + galleryWallNumber + " .artistName").text(this.artistName);
+        $(".gallery_wall_" + galleryWallNumber + " .artistBio").text(this.artistBiography).scrollTop(0);
+        $(".gallery_wall_" + galleryWallNumber + " .map_image_div").append(this.paintingMap);
     };
     /*
      * Method to take in a string and return it with all instances of "x" replaced with "y"
@@ -312,21 +339,35 @@ function Painting() {
 }
 
 function rotateGalleryRight() {
-    $('.gallery_wall_1, .gallery_wall_1 > .gallery_container_div').css({
-        'transform':'rotateY(0deg)'
-    });
-    $('.gallery_wall_2').css({
-        'transform-origin':'right',
-        'transform':'rotateY(90deg)'
-    })
+    $('.gallery_column').css('transform','translate3d(-49vmin, 0, -49vmin) rotateY(90deg)');
+}
+
+function rotateGalleryLeft() {
+    $('.gallery_column').css('transform','translate3d(-49vmin, 0, -49vmin) rotateY(-90deg)');
+}
+
+function rotateGalleryToBack() {
+    $('.gallery_column').css('transform','translate3d(-49vmin, 0, -49vmin) rotateY(180deg)');
+}
+
+function rotateGalleryToFront() {
+    $('.gallery_column').css('transform','translate3d(-49vmin, 0, -49vmin) rotateY(0deg)');
+}
+
+function rotateGallery(newRotation) {
+    $('.gallery_column').css('transform','translate3d(-49vmin, 0, -49vmin) rotateY(' + newRotation + 'deg)');
 }
 
 
+
 $(document).ready(function() {
-    allPaintings[0].populatePage();
+    allPaintings[0].populatePage(1);
+    allPaintings[0].populatePage(2);
     getNewPainting();
     var timer = setInterval(function(){
-        if(allPaintings.length > 2) {
+        if(allPaintings.length > 3) {
+            allPaintings[1].populatePage(3);
+            allPaintings[2].populatePage(4);
             $(".nextPainting").on("click", nextPainting);
             clearInterval(timer);
         }

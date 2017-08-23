@@ -13,33 +13,43 @@ button {
     align-items: center;
     position: absolute;
     background-position: center;
+    perspective: 3000px;
     top: 0;
     left: 0;
 }
 
-.gallery_wall_1, .gallery_wall_2, .gallery_wall_3 {
+.gallery_column {
+    height: 100vh;
+    transform: translate3d(-49vmin, 0, -49vmin);
+    transform-origin: 49vmin 0 -49vmin;
+    position: absolute;
+    transform-style: preserve-3d;
+    transition: 3s;
+}
+
+.gallery_wall_1, .gallery_wall_2, .gallery_wall_3, .gallery_wall_4 {
     position: absolute;
     top: 0;
-    height: 100vh;
+    height: 100%;
     background-image: url(assets/images/witewall_3.png);
+    box-sizing: border-box;
     box-shadow: 2px 0 10px 1px grey;
 }
 
-.gallery_wall_1, .gallery_wall_1 > .gallery_container_div {
-    transform: rotateY(90deg);
-    transform-origin: left;
-    transition: 2s;
+.gallery_wall_1 {
+    transform: translate3d(-49vmin, 0, -49vmin) rotate3d(0, 1, 0, -90deg);
 }
 
-.gallery_wall_2, .gallery_wall_2 > .gallery_container_div {
-    transform: rotateY(0deg);
-    transition: 2s;
+.gallery_wall_2 {
+    transform: translate3d(0, 0, 0) rotate3d(0, 0, 0, 0deg);
 }
 
-.gallery_wall_3, .gallery_wall_3 > .gallery_container_div {
-    transform: rotateY(90deg);
-    transform-origin: right;
-    transition: 2s;
+.gallery_wall_3 {
+    transform: translate3d(49vmin, 0, -49vmin) rotate3d(0, 1, 0, 90deg);
+}
+
+.gallery_wall_4 {
+    transform: translate3d(0, 0, -98vmin) rotate3d(0, 1, 0, 180deg);
 }
 
 .gallery_container_div {
@@ -115,7 +125,7 @@ button {
     justify-content: center;
     align-items: center;
     z-index: 1;
-    box-shadow: 0px 0px 1px 3px white;
+    box-shadow: 0 0 1px 3px white;
 }
 
 
@@ -167,7 +177,7 @@ button {
     text-align: center;
     overflow: scroll;
     overflow-x: hidden;
-    padding: 0 4%;
+    padding: 0 6%;
 }
 .artistName, .artistBio {
     color: rgba(0,0,0,0.6);
