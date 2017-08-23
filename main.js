@@ -231,12 +231,11 @@ function Painting() {
      * Method that calls all of the Methods to add DOM elements to the page
      */
     this.populatePage = function() {
-        this.createImageDOM(this.paintingImage, '.painting_div');
-        this.createImageDOM(this.artistImage, '.artist_container_div');
-        $("#artistName").text(this.artistName);
-        $("#artistBio").text(this.artistBiography);
-        $("#artistBio").scrollTop(0);
-        $(".map_container_div").append(this.paintingMap);
+        this.createImageDOM(this.paintingImage, '.painting_image_div');
+        this.createImageDOM(this.artistImage, '.artist_image_div');
+        $(".artistName").text(this.artistName);
+        $(".artistBio").text(this.artistBiography).scrollTop(0);
+        $(".map_image_div").append(this.paintingMap);
     };
     /*
      * Method to take in a string and return it with all instances of "x" replaced with "y"
