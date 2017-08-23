@@ -260,4 +260,11 @@ function Painting() {
 $(document).ready(function() {
     $('.generateNewPainting').on('click', getNewPainting);
     getNewPainting();
+    // var timer = setInterval(function(){
+    //     if(allPaintings.length > 2) {
+    //         $("#nextPainting").on("click", nextPainting);
+    //         clearInterval(timer);
+    //     }
+    // },250);
+    // $("#previousPainting").on("click", previousPainting);
 });
