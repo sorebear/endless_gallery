@@ -201,9 +201,14 @@ button {
     background-size: contain;
     display: flex;
     text-align: center;
+    align-items: center;
     justify-content: center;
 }
-
+.nameplate h3 {
+    position: relative;
+    bottom: 3px;
+    left: 4px;
+}
 .button_ctn{
     display:flex;
     justify-content: space-between;
