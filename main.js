@@ -8,7 +8,7 @@ var allPaintings = [];
  * Global variable to store the index in allPaintings of the currently displayed painting
  * @Global {Number}
  */
-var currentPainting = -1;
+var currentPainting = 0;
 /**
  * Global Variable to store completed AJAX calls in chain
  * @Global {Number}
@@ -21,6 +21,21 @@ var countAjax = 0;
  */
 
 var paintingsRequested = 4;
+
+/**
+ * Global Variable to store information to build initial Splash Page
+ * @Global {Object}
+ */
+
+var splashPage = new Painting();
+splashPage.artistBiography = "Welcome to the Endless Gallery! With information pulled from four separate API's by the talented coding artists you see above, you can explore a vast collection of artworks, view that painting's artist and current location in the world, as well as read a short biography of the artist who created it, where available. This application was made with data pulled from the Artsy API, the Google Geocoding API, the Google Maps API, and the MediaWiki unofficial Wikipedia API. Thank you for taking the time to explore our Endless Gallery, and enjoy!";
+splashPage.artistName = "Endless Gallery";
+splashPage.paintingGallery = "LearningFuze, Irvine, CA";
+splashPage.galleryCoordinates.latitude = 33.6348748;
+splashPage.galleryCoordinates.longitude = -117.7404808;
+splashPage.paintingImage = "assets/images/code_screen_shot.png";
+splashPage.paintingMap = getMapElement(splashPage.galleryCoordinates.latitude, splashPage.galleryCoordinates.longitude);
+allPaintings.push(splashPage);
 
 /**
  * AJAX call to Artsy to receive random artwork with information
@@ -119,7 +134,7 @@ function getGalleryMap(response){
     allPaintings[allPaintings.length - 1].paintingMap = iframeElement;
     checkForAjaxCompletion();
 }
-function getInteractiveMapDOMElement(lat, long){
+function getMapElement(lat, long){
     var urlStr = "https://www.google.com/maps/embed/v1/view?key=AIzaSyDWPRK37JSNxBhmLhEbWzCQ57MQBQu8atk&center=" + lat + "," + long + "&zoom=18&maptype=satellite";
     var iframeElement = $('<iframe>',{
         frameborder: "0",
@@ -295,22 +310,13 @@ function rotateGalleryRight() {
 
 
 $(document).ready(function() {
-    //$('.generateNewPainting').on('click', getNewPainting);
-    // var painting = new Painting();
-    // painting.paintingTitle = "Endless Gallery";
-    // painting.artistName = "Cody, Soren, and Grayson";
-    // painting.artistBiography = "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem, voluptatibus non ipsa. Perspiciatis numquam modi dolorum, est velit autem ipsum cupiditate! Assumenda earum quam iusto porro eum impedit recusandae et. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam, quis temporibus doloribus tenetur, iusto illum eius ipsum eaque aspernatur amet error iste assumenda minima ab deserunt unde fugiat! Similique, amet! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio hic suscipit veniam officia autem, aliquam impedit magnam perferendis enim laudantium sunt, adipisci reprehenderit eos accusantium tempore non quo ipsum est.";
-    // painting.paintingImage = "/assets/code_screen_shot";
-    // painting.galleryCoordinates.latitude = 33.634692;
-    // painting.galleryCoordinates.longitude = -117.740296;
-    // painting.paintingMap
-
+    allPaintings[0].populatePage();
     getNewPainting();
-    // var timer = setInterval(function(){
-    //     if(allPaintings.length > 2) {
-    //         $("#nextPainting").on("click", nextPainting);
-    //         clearInterval(timer);
-    //     }
-    // },250);
-    // $("#previousPainting").on("click", previousPainting);
+    var timer = setInterval(function(){
+        if(allPaintings.length > 2) {
+            $(".nextPainting").on("click", nextPainting);
+            clearInterval(timer);
+        }
+    },250);
+    $(".previousPainting").on("click", previousPainting);
 });
