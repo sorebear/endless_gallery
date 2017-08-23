@@ -259,7 +259,20 @@ function reset(gallery_wall){
     $('.' + gallery_wall + ' .artistBio').text('');
     $('.' + gallery_wall + ' .map_image_div').empty();
 }
-
+/**
+ * Function to return the first words of a string under a specified char limit
+ * @param char_lim
+ * @param  str
+ * @return {string}
+ */
+function firstWordsUnderCharLim(char_lim, str){
+    if(str.length <= char_lim) return str;
+    var return_str = '';
+    for(var i=0; i< char_lim - 3; i++){
+        return_str += str[i];
+    }
+    return return_str + "...";
+}
 /**
  * Creates an instance of Painting
  *
@@ -340,6 +353,8 @@ function Painting() {
         $(".gallery_wall_" + galleryWallNumber + " .artistBio").text(this.artistBiography).scrollTop(0);
         $(".gallery_wall_" + galleryWallNumber + " .map_image_div").append(this.paintingMap);
         if(!this.paintingTitle) this.paintingTitle = "Untitled";
+        $(".gallery_wall_" + galleryWallNumber + " .nameplate h3").text(firstWordsUnderCharLim(22, this.paintingTitle));
+        $(".gallery_wall_" + galleryWallNumber + " .nameplate h3").attr("title", this.paintingTitle);
     };
     /*
      * Method to take in a string and return it with all instances of "x" replaced with "y"

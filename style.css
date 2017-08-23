@@ -207,7 +207,8 @@ button {
     width: 0;
     background: transparent;
 }
-.nameplate{
+
+.nameplate {
     position: absolute;
     bottom: -160px;
     background-image: url(assets/images/nameplate.png);
@@ -216,6 +217,7 @@ button {
     background-size: contain;
     display: flex;
     text-align: center;
+    align-items: center;
     justify-content: center;
 }
 
@@ -269,5 +271,13 @@ button {
 }
 
 @keyframes beat {
-    to {box-shadow: 0 0 0 3px black}
+    to {
+        box-shadow: 0 0 0 3px black
+    }
+}
+
+.nameplate h3 {
+    position: relative;
+    bottom: 3px;
+    left: 4px;
 }
