@@ -162,7 +162,7 @@ button {
     box-sizing: border-box;
     border-width: 10px;
     border-color: darkgray;
-    border-style: outset;
+    border-style: inset;
     font-family: 'Lora', serif;
     text-align: center;
     overflow: scroll;
