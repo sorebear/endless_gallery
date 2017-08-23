@@ -189,6 +189,15 @@ function nextPainting(){
 function errorFunction(){
     console.log("whoops");
 }
+/**
+ * Clears a gallery wall
+ * @param gallery_wall - the class name of the gallery wall div intended to be cleared
+ */
+function reset(gallery_wall){
+    $('.' + gallery_wall + ' #artistName').text('');
+    $('.' + gallery_wall + ' #artistBio').text('');
+    $('.' + gallery_wall + ' .map_container_div').empty();
+}
 
 /**
  * Creates an instance of Painting
@@ -306,6 +315,7 @@ $(document).ready(function() {
     // painting.paintingMap
 
     getNewPainting();
+
     // var timer = setInterval(function(){
     //     if(allPaintings.length > 2) {
     //         $("#nextPainting").on("click", nextPainting);
