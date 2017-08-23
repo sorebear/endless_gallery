@@ -315,18 +315,11 @@ function Painting() {
     this.populatePage = function(galleryWallNumber) {
         this.createImageDOM(this.paintingImage, '.gallery_wall_' + galleryWallNumber + ' .painting_image_div');
         this.createImageDOM(this.artistImage, ' .gallery_wall_' + galleryWallNumber + ' .artist_image_div');
+        if(!this.artistName) this.artistName = "Unknown Artist";
         $(".gallery_wall_" + galleryWallNumber + " .artistName").text(this.artistName);
         $(".gallery_wall_" + galleryWallNumber + " .artistBio").text(this.artistBiography).scrollTop(0);
         $(".gallery_wall_" + galleryWallNumber + " .map_image_div").append(this.paintingMap);
-        /*if(response._embedded.artists[0].name === '' || response._embedded.artists[0].name === undefined || response._embedded.artists[0].name === null) {
-            allPaintings[allPaintings.length - 1].artistName = "Mystery Artist";
-        }
-        else {
-            allPaintings[allPaintings.length - 1].artistName = response._embedded.artists[0].name;
-        }
-         if( response.title === '' || response.title === undefined || response.title === null) allPaintings[allPaintings.length - 1].paintingTitle = "Untitled";
-         else allPaintings[allPaintings.length - 1].paintingTitle = response.title;
-        */
+        if(!this.paintingTitle) this.paintingTitle = "Untitled";
     };
     /*
      * Method to take in a string and return it with all instances of "x" replaced with "y"
