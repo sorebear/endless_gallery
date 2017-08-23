@@ -156,18 +156,22 @@ button {
 .artist_info_text {
     width: 95%;
     max-height: 100%;
-    background-color: #2a3133;
+    background-color: dimgray;
     color: white;
     position: absolute;
     box-sizing: border-box;
     border-width: 10px;
-    border-color: dimgrey;
+    border-color: darkgray;
     border-style: outset;
     font-family: 'Lora', serif;
     text-align: center;
     overflow: scroll;
     overflow-x: hidden;
     padding: 0 4%;
+}
+.artistName, .artistBio {
+    color: rgba(0,0,0,0.6);
+    text-shadow: 2px 2px 3px rgba(255,255,255,0.1);
 }
 
 .artist_info_text > p {
