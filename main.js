@@ -131,7 +131,16 @@ function getGalleryMap(response){
     allPaintings[allPaintings.length - 1].paintingMap = iframeElement;
     checkForAjaxCompletion();
 }
-
+function getInteractiveMapDOMElement(lat, long){
+    var urlStr = "https://www.google.com/maps/embed/v1/view?key=AIzaSyDWPRK37JSNxBhmLhEbWzCQ57MQBQu8atk&center=" + lat + "," + long + "&zoom=18&maptype=satellite";
+    var iframeElement = $('<iframe>',{
+        frameborder: "0",
+        style: "border:0",
+        src: urlStr
+    });
+    iframeElement.css({"width":"100%", "height":"100%"});
+    return iframeElement;
+}
 
 /**
  * AJAX call
@@ -199,6 +208,7 @@ function errorFunction(){
  * @constructor
  * @this {Painting}
  */
+
 function Painting() {
     /**
      * @Private Image of the Painting
@@ -287,7 +297,16 @@ function Painting() {
 }
 
 $(document).ready(function() {
-    $('.generateNewPainting').on('click', getNewPainting);
+    //$('.generateNewPainting').on('click', getNewPainting);
+    // var painting = new Painting();
+    // painting.paintingTitle = "Endless Gallery";
+    // painting.artistName = "Cody, Soren, and Grayson";
+    // painting.artistBiography = "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem, voluptatibus non ipsa. Perspiciatis numquam modi dolorum, est velit autem ipsum cupiditate! Assumenda earum quam iusto porro eum impedit recusandae et. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam, quis temporibus doloribus tenetur, iusto illum eius ipsum eaque aspernatur amet error iste assumenda minima ab deserunt unde fugiat! Similique, amet! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio hic suscipit veniam officia autem, aliquam impedit magnam perferendis enim laudantium sunt, adipisci reprehenderit eos accusantium tempore non quo ipsum est.";
+    // painting.paintingImage = "/assets/code_screen_shot";
+    // painting.galleryCoordinates.latitude = 33.634692;
+    // painting.galleryCoordinates.longitude = -117.740296;
+    // painting.paintingMap
+
     getNewPainting();
     // var timer = setInterval(function(){
     //     if(allPaintings.length > 2) {
