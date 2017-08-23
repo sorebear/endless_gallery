@@ -177,7 +177,7 @@ button {
     text-align: center;
     overflow: scroll;
     overflow-x: hidden;
-    padding: 0 4%;
+    padding: 0 6%;
 }
 .artistName, .artistBio {
     color: rgba(0,0,0,0.6);
