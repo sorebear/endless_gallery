@@ -192,7 +192,6 @@ function checkForAjaxCompletion () {
 }
 
 function previousPainting(){
-    if(currentPainting - 1 < 0) return;
     $('.previousPainting, .nextPainting').off();
     $('.nextPainting').removeClass('clickable');
     $('.previousPainting').removeClass('clickable');
@@ -214,7 +213,9 @@ function previousPainting(){
     allPaintings[currentPainting].populatePage(faceToChange);
     setTimeout(function() {
         $('.nextPainting').addClass('clickable').on("click", nextPainting);
-        $('.previousPainting').addClass('clickable').on("click", previousPainting);
+        if (currentPainting > 0) {
+            $('.previousPainting').addClass('clickable').on("click", previousPainting);
+        }
 
     }, 2000);
 }
@@ -361,6 +362,14 @@ function Painting() {
 
 function rotateGallery(newRotation) {
     $('.gallery_column').css('transform','translate3d(-49vmin, 0, -49vmin) rotateY(' + newRotation + 'deg)');
+}
+
+function rotateTop() {
+    $('.gallery_column').css('transform','translate3d(-49vmin, 49vmin, 0) rotate3d(1, 0, 0, -90deg)');
+}
+
+function rotateBottom() {
+    $('.gallery_column').css('transform','translate3d(-49vmin, 49vmin, -98vmin) rotate3d(1, 0, 0, 90deg)');
 }
 
 $(document).ready(function() {
