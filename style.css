@@ -24,7 +24,7 @@ button {
     transform-origin: 49vmin 0 -49vmin;
     position: absolute;
     transform-style: preserve-3d;
-    transition: 3s;
+    transition: 1.9s;
 }
 
 .gallery_wall_1, .gallery_wall_2, .gallery_wall_3, .gallery_wall_4 {
@@ -140,6 +140,7 @@ button {
 
 .artist_image_div {
     border-radius: 100%;
+    background-size: contain;
     position: absolute;
     width: 65%;
     height: 65%;
@@ -193,20 +194,10 @@ button {
     background: transparent;
 }
 
-/*.button_ctn{*/
-    /*display:flex;*/
-    /*justify-content: space-between;*/
-    /*width: 100%;*/
-/*}*/
-/*.button_ctn div{*/
-    /*border: solid 1px black;*/
-    /*border-radius: 5px;*/
-/*}*/
-
 .buttonDiv {
     height: 50px;
     width: 50px;
-    border: 3px solid black;
+    border: 3px solid grey;
     border-radius: 100%;
     position: fixed;
     top: 50%;
@@ -224,7 +215,7 @@ button {
 .arrow {
     position: absolute;
     transform: translate(-50%, -50%) rotate(45deg);
-    border-color: black;
+    border-color: grey;
     border-style: solid;
     height: 40%;
     width: 40%;
@@ -239,4 +230,19 @@ button {
 .rightArrow {
     left: 40%;
     border-width: 3px 3px 0 0;
+}
+
+.clickable > div {
+    border-color: black;
+}
+
+.clickable {
+    border-color: black;
+    animation: beat 1s infinite alternate;
+    box-shadow: 0 0 0 1px black;
+    transform-origin: center;
+}
+
+@keyframes beat {
+    to {box-shadow: 0 0 0 3px black}
 }

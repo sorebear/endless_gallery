@@ -193,6 +193,9 @@ function checkForAjaxCompletion () {
 
 function previousPainting(){
     if(currentPainting - 1 < 0) return;
+    $('.previousPainting, .nextPainting').off();
+    $('.nextPainting').removeClass('clickable');
+    $('.previousPainting').removeClass('clickable');
     var $galleryColumn = $('.gallery_column');
     var newRotation = parseInt($galleryColumn.attr('rotation')) + 90;
     $galleryColumn.attr('rotation', newRotation);
@@ -209,8 +212,16 @@ function previousPainting(){
     reset("gallery_wall_" + faceToChange);
     currentPainting--;
     allPaintings[currentPainting].populatePage(faceToChange);
+    setTimeout(function() {
+        $('.nextPainting').addClass('clickable').on("click", nextPainting);
+        $('.previousPainting').addClass('clickable').on("click", previousPainting);
+
+    }, 2000);
 }
 function nextPainting(){
+    $('.previousPainting, .nextPainting').off();
+    $('.nextPainting').removeClass('clickable');
+    $('.previousPainting').removeClass('clickable');
     var $galleryColumn = $('.gallery_column');
     var newRotation = parseInt($galleryColumn.attr('rotation')) - 90;
     $galleryColumn.attr('rotation', newRotation);
@@ -229,6 +240,10 @@ function nextPainting(){
     getNewPainting();
     currentPainting++;
     allPaintings[currentPainting + 2].populatePage(faceToChange);
+    setTimeout(function() {
+        $('.nextPainting').addClass('clickable').on("click", nextPainting);
+        $('.previousPainting').addClass('clickable').on("click", previousPainting);
+    }, 2000)
 }
 
 function errorFunction(){
@@ -314,7 +329,11 @@ function Painting() {
      */
     this.populatePage = function(galleryWallNumber) {
         this.createImageDOM(this.paintingImage, '.gallery_wall_' + galleryWallNumber + ' .painting_image_div');
-        this.createImageDOM(this.artistImage, ' .gallery_wall_' + galleryWallNumber + ' .artist_image_div');
+        if (this.artistImage === null) {
+            this.createImageDOM("assets/images/unknownArtist.png", ' .gallery_wall_' + galleryWallNumber + ' .artist_image_div');
+        } else {
+            this.createImageDOM(this.artistImage, ' .gallery_wall_' + galleryWallNumber + ' .artist_image_div');
+        }
         $(".gallery_wall_" + galleryWallNumber + " .artistName").text(this.artistName);
         $(".gallery_wall_" + galleryWallNumber + " .artistBio").text(this.artistBiography).scrollTop(0);
         $(".gallery_wall_" + galleryWallNumber + " .map_image_div").append(this.paintingMap);
@@ -338,36 +357,18 @@ function Painting() {
     }
 }
 
-function rotateGalleryRight() {
-    $('.gallery_column').css('transform','translate3d(-49vmin, 0, -49vmin) rotateY(90deg)');
-}
-
-function rotateGalleryLeft() {
-    $('.gallery_column').css('transform','translate3d(-49vmin, 0, -49vmin) rotateY(-90deg)');
-}
-
-function rotateGalleryToBack() {
-    $('.gallery_column').css('transform','translate3d(-49vmin, 0, -49vmin) rotateY(180deg)');
-}
-
-function rotateGalleryToFront() {
-    $('.gallery_column').css('transform','translate3d(-49vmin, 0, -49vmin) rotateY(0deg)');
-}
-
 function rotateGallery(newRotation) {
     $('.gallery_column').css('transform','translate3d(-49vmin, 0, -49vmin) rotateY(' + newRotation + 'deg)');
 }
 
-
-
 $(document).ready(function() {
-    allPaintings[0].populatePage(1);
     allPaintings[0].populatePage(2);
     getNewPainting();
     var timer = setInterval(function(){
         if(allPaintings.length > 3) {
             allPaintings[1].populatePage(3);
             allPaintings[2].populatePage(4);
+            $(".nextPainting").addClass('clickable');
             $(".nextPainting").on("click", nextPainting);
             clearInterval(timer);
         }
