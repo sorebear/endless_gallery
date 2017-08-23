@@ -310,14 +310,21 @@ function Painting() {
 }
 
 function rotateGalleryRight() {
-    $('.gallery_wall_1, .gallery_wall_1 > .gallery_container_div').css({
-        'transform':'rotateY(0deg)'
-    });
-    $('.gallery_wall_2').css({
-        'transform-origin':'right',
-        'transform':'rotateY(90deg)'
-    })
+    $('.gallery_column').css('transform','translate3d(-49vmin, 0, -49vmin) rotateY(90deg)');
 }
+
+function rotateGalleryLeft() {
+    $('.gallery_column').css('transform','translate3d(-49vmin, 0, -49vmin) rotateY(-90deg)');
+}
+
+function rotateGalleryToBack() {
+    $('.gallery_column').css('transform','translate3d(-49vmin, 0, -49vmin) rotateY(180deg)');
+}
+
+function rotateGalleryToFront() {
+    $('.gallery_column').css('transform','translate3d(-49vmin, 0, -49vmin) rotateY(0deg)');
+}
+
 
 
 $(document).ready(function() {
