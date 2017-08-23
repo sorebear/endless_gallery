@@ -23,6 +23,18 @@ var countAjax = 0;
 var paintingsRequested = 4;
 
 /**
+ * Global Variable to store information to build initial Splash Page
+ * @Global {Object}
+ */
+
+var splashPage = new Painting();
+splashPage.artistBiography = "Welcome to the Endless Gallery! With information pulled from four separate API's by the talented coding artists you see above, you can explore a vast collection of artworks, view that painting's artist and current location in the world, as well as read a short biography of the artist who created it, where available. This application was made with data pulled from the Artsy API, the Google Geocoding API, the Google Maps API, and the MediaWiki unofficial Wikipedia API. Thank you for taking the time to explore our Endless Gallery, and enjoy!";
+splashPage.artistName = "Endless Gallery";
+splashPage.paintingGallery = "LearningFuze, Irvine, CA";
+splashPage.galleryCoordinates.latitude = 33.6348748;
+splashPage.galleryCoordinates.longitude = -117.7404808;
+
+/**
  * AJAX call to Artsy to receive random artwork with information
  * @param {string} "sample" and requires XAPP token
  * @return {JSON} Paiting image, painting title, painting ID, and gallery name (with conditional to check if empty)
