@@ -310,14 +310,13 @@ function rotateGalleryRight() {
 
 
 $(document).ready(function() {
-    //$('.generateNewPainting').on('click', getNewPainting);
     allPaintings[0].populatePage();
     getNewPainting();
     var timer = setInterval(function(){
         if(allPaintings.length > 2) {
-            $("#nextPainting").on("click", nextPainting);
+            $(".nextPainting").on("click", nextPainting);
             clearInterval(timer);
         }
     },250);
-    $("#previousPainting").on("click", previousPainting);
+    $(".previousPainting").on("click", previousPainting);
 });
