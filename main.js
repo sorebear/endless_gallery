@@ -35,6 +35,8 @@ splashPage.galleryCoordinates.latitude = 33.6348748;
 splashPage.galleryCoordinates.longitude = -117.7404808;
 splashPage.paintingImage = "assets/images/code_screen_shot.png";
 splashPage.paintingMap = getMapElement(splashPage.galleryCoordinates.latitude, splashPage.galleryCoordinates.longitude);
+splashPage.paintingTitle = "Agile Creation";
+splashPage.artistImage = "assets/images/ourGroup.jpg";
 allPaintings.push(splashPage);
 
 /**
@@ -82,7 +84,7 @@ function getPaintingArtist(response) {
     else allPaintings[allPaintings.length - 1].paintingTitle = response.title;
     allPaintings[allPaintings.length - 1].paintingImage = allPaintings[allPaintings.length - 1].setPaintingSize(response._links.image.href, "large");
     $.ajax({  //Artist Lookup
-        url: "https://api.artsy.net/api/artists?sample",
+        url: "https://api.artsy.net/api/artists",
         method: "GET",
         dataType: "json",
         data: {
@@ -153,12 +155,12 @@ function getMapElement(lat, long){
  */
 function getArtistBio(response) {
     countAjax++;
-    allPaintings[allPaintings.length - 1].artistImage = allPaintings[allPaintings.length - 1].setPaintingSize(response._links.image.href, "square");
+    allPaintings[allPaintings.length - 1].artistImage = allPaintings[allPaintings.length - 1].setPaintingSize(response._embedded.artists[0]._links.image.href, "square");
     if(response.name === '' || response.name === undefined || response.name === null) {
         allPaintings[allPaintings.length - 1].artistName = "Mystery Artist";
     }
     else {
-        allPaintings[allPaintings.length - 1].artistName = response.name;
+        allPaintings[allPaintings.length - 1].artistName = response._embedded.artists[0].name;
     }
     $.ajax({ //get first passage of Wikipedia of Artist
         url: "https://en.wikipedia.org/w/api.php",
