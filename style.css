@@ -179,12 +179,12 @@ button {
     background: transparent;
 }
 
-#button_ctn{
+.button_ctn{
     display:flex;
     justify-content: space-between;
     width: 100%;
 }
-#button_ctn div{
+.button_ctn div{
     border: solid 1px black;
     border-radius: 5px;
 }
