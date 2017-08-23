@@ -71,3 +71,12 @@ button {
     width: 0;
     background: transparent;
 }
+#button_ctn{
+    display:flex;
+    justify-content: space-between;
+    width: 100%;
+}
+#previousPainting{
+}
+#nextPainting{
+}
