@@ -192,6 +192,17 @@ button {
     width: 0;
     background: transparent;
 }
+.nameplate{
+    position: absolute;
+    bottom: -160px;
+    background-image: url(assets/images/nameplate.png);
+    height: 70.56%;
+    width: 60%;
+    background-size: contain;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+}
 
 .button_ctn{
     display:flex;
