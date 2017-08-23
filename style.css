@@ -128,6 +128,7 @@ button {
 }
 
 .artist_info_container_div {
+<<<<<<< HEAD
     width: 30%;
     height: 60%;
     position: relative;
@@ -159,3 +160,18 @@ button {
     /*0% {transform: rotateY(90deg)}*/
     /*100% {transform: rotateY(0deg)}*/
 /*}*/
+=======
+    width: 30vmin;
+    height: 60vmin;
+    background-color: crimson;
+    font-family: 'Lora', serif;
+    text-align: center;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+}
+>>>>>>> 930b86b629e5b8980527a25f4ffca3e2f1a1848d
