@@ -80,8 +80,7 @@ function startAjaxBranches (response) {
  */
 function getPaintingArtist(response) {
     allPaintings[allPaintings.length - 1].paintingID = response.id;
-    if( response.title === '' || response.title === undefined || response.title === null) allPaintings[allPaintings.length - 1].paintingTitle = "Untitled";
-    else allPaintings[allPaintings.length - 1].paintingTitle = response.title;
+    allPaintings[allPaintings.length - 1].paintingTitle = response.title;
     allPaintings[allPaintings.length - 1].paintingImage = allPaintings[allPaintings.length - 1].setPaintingSize(response._links.image.href, "large");
     $.ajax({  //Artist Lookup
         url: "https://api.artsy.net/api/artists",
@@ -156,12 +155,7 @@ function getMapElement(lat, long){
 function getArtistBio(response) {
     countAjax++;
     allPaintings[allPaintings.length - 1].artistImage = allPaintings[allPaintings.length - 1].setPaintingSize(response._embedded.artists[0]._links.image.href, "square");
-    if(response.name === '' || response.name === undefined || response.name === null) {
-        allPaintings[allPaintings.length - 1].artistName = "Mystery Artist";
-    }
-    else {
-        allPaintings[allPaintings.length - 1].artistName = response._embedded.artists[0].name;
-    }
+    allPaintings[allPaintings.length - 1].artistName = response._embedded.artists[0].name;
     $.ajax({ //get first passage of Wikipedia of Artist
         url: "https://en.wikipedia.org/w/api.php",
         method: "GET",
@@ -324,6 +318,15 @@ function Painting() {
         $(".gallery_wall_" + galleryWallNumber + " .artistName").text(this.artistName);
         $(".gallery_wall_" + galleryWallNumber + " .artistBio").text(this.artistBiography).scrollTop(0);
         $(".gallery_wall_" + galleryWallNumber + " .map_image_div").append(this.paintingMap);
+        /*if(response._embedded.artists[0].name === '' || response._embedded.artists[0].name === undefined || response._embedded.artists[0].name === null) {
+            allPaintings[allPaintings.length - 1].artistName = "Mystery Artist";
+        }
+        else {
+            allPaintings[allPaintings.length - 1].artistName = response._embedded.artists[0].name;
+        }
+         if( response.title === '' || response.title === undefined || response.title === null) allPaintings[allPaintings.length - 1].paintingTitle = "Untitled";
+         else allPaintings[allPaintings.length - 1].paintingTitle = response.title;
+        */
     };
     /*
      * Method to take in a string and return it with all instances of "x" replaced with "y"
