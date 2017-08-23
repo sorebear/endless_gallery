@@ -178,3 +178,13 @@ button {
     width: 0;
     background: transparent;
 }
+
+#button_ctn{
+    display:flex;
+    justify-content: space-between;
+    width: 100%;
+}
+#button_ctn div{
+    border: solid 1px black;
+    border-radius: 5px;
+}
