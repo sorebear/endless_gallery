@@ -5,6 +5,11 @@
 var allPaintings = [];
 
 /**
+ * Global variable to store the index in allPaintings of the currently displayed painting
+ * @Global {Number}
+ */
+var currentPainting = -1;
+/**
  * Global Variable to store completed AJAX calls in chain
  * @Global {Number}
  */
@@ -158,6 +163,18 @@ function checkForAjaxCompletion () {
             getNewPainting();
         }
     }
+}
+
+function previousPainting(){
+    if(currentPainting - 1 < 0) return;
+    currentPainting--;
+    allPaintings[currentPainting].populatePage();
+}
+function nextPainting(){
+    paintingsRequested++;
+    getNewPainting();
+    currentPainting++;
+    allPaintings[currentPainting].populatePage();
 }
 
 function errorFunction(){
