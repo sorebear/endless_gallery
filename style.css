@@ -61,6 +61,7 @@ button {
     width: 30vmin;
     height: 60vmin;
     background-color: crimson;
+    font-family: 'Lora', serif;
     text-align: center;
     overflow: scroll;
     overflow-x: hidden;
