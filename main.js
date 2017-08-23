@@ -190,11 +190,13 @@ function checkForAjaxCompletion () {
 }
 
 function previousPainting(){
+    reset("gallery_wall_2");
     if(currentPainting - 1 < 0) return;
     currentPainting--;
     allPaintings[currentPainting].populatePage();
 }
 function nextPainting(){
+    reset("gallery_wall_2");
     paintingsRequested++;
     getNewPainting();
     currentPainting++;
@@ -209,9 +211,9 @@ function errorFunction(){
  * @param gallery_wall - the class name of the gallery wall div intended to be cleared
  */
 function reset(gallery_wall){
-    $('.' + gallery_wall + ' #artistName').text('');
-    $('.' + gallery_wall + ' #artistBio').text('');
-    $('.' + gallery_wall + ' .map_container_div').empty();
+    $('.' + gallery_wall + ' .artistName').text('');
+    $('.' + gallery_wall + ' .artistBio').text('');
+    $('.' + gallery_wall + ' .map_image_div').empty();
 }
 
 /**
