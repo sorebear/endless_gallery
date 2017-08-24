@@ -1,8 +1,9 @@
-button {
-    position: fixed;
+
+* {
+    font-family: 'Lora', serif;
 }
 
-
+/*Styling To Build 3D Cube*/
 .content_container {
     background-image: url(assets/images/gallery3.jpg);
     margin: 0;
@@ -19,6 +20,7 @@ button {
     left: 0;
 }
 
+/*The Containing Cube Object*/
 .gallery_column {
     height: 100vh;
     transform: translate3d(-49vmin, 0, -49vmin);
@@ -28,7 +30,8 @@ button {
     transition: 1.9s;
 }
 
-.gallery_wall_1, .gallery_wall_2, .gallery_wall_3, .gallery_wall_4, .gallery_top, .gallery_bottom {
+/*Styling and positioning for each individual side of the cube*/
+.gallery_wall_1, .gallery_wall_2, .gallery_wall_3, .gallery_wall_4, .gallery_top {
     position: absolute;
     top: 0;
     height: 100%;
@@ -51,7 +54,6 @@ button {
 .gallery_wall_4 {
     transform: translate3d(0, 0, -98vmin) rotate3d(0, 1, 0, 180deg);
 }
-
 .gallery_top {
     transform: translate3d(0, -49vmin, -49vmin) rotate3d(1, 0, 0, 90deg);
     width: 98vmin;
@@ -60,6 +62,7 @@ button {
     justify-content: center;
 }
 
+/*Stying and positioning for the Text on the Top Face of the Cube*/
 .textbox {
     display: flex;
     justify-content: center;
@@ -79,10 +82,7 @@ a {
     color: black;
 }
 
-.gallery_bottom {
-
-}
-
+/*Styling and Positioning for the Gallery Layout on the front, back, and sides of the Cube*/
 .gallery_container_div {
     height: 98vmin;
     width: 98vmin;
@@ -92,6 +92,7 @@ a {
     flex-flow: column wrap;
 }
 
+/*Styling and Positioning for the Featured Painting*/
 .painting_container_div {
     position: relative;
     width: 60%;
@@ -130,6 +131,27 @@ a {
     background-position: center;
 }
 
+.nameplate {
+    position: absolute;
+    bottom: -160px;
+    background-image: url(assets/images/nameplate.png);
+    height: 70.56%;
+    width: 60%;
+    background-size: contain;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.nameplate h3 {
+    position: relative;
+    bottom: 3px;
+    left: 4px;
+}
+
+
+/*Styiling and Positioning for the Google Map*/
 .map_container_div {
     width: 60%;
     height: 30%;
@@ -158,7 +180,7 @@ a {
     z-index: 1;
 }
 
-
+/*Styling and Positioning for the Artist Portrait*/
 .artist_container_div {
     position: relative;
     width: 30%;
@@ -186,6 +208,7 @@ a {
     z-index: 1;
 }
 
+/*Styling and Positioning for the Artist Biography Information*/
 .artist_info_container_div {
     width: 30%;
     height: 60%;
@@ -203,7 +226,6 @@ a {
     box-sizing: border-box;
     border: 20px solid transparent;
     border-image: url(assets/images/placardFrame.png) 100 round;
-    font-family: 'Lora', serif;
     text-align: center;
     overflow: scroll;
     overflow-x: hidden;
@@ -222,19 +244,7 @@ a {
     background: transparent;
 }
 
-.nameplate {
-    position: absolute;
-    bottom: -160px;
-    background-image: url(assets/images/nameplate.png);
-    height: 70.56%;
-    width: 60%;
-    background-size: contain;
-    display: flex;
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-}
-
+/*Styling and Positioning For Rotation Arrows*/
 .buttonDiv {
     height: 50px;
     width: 50px;
@@ -245,25 +255,31 @@ a {
 
 .previousPainting, .nextPainting {
     top: 50%;
-    transform: translateY(-50%);
+    transition: .5s;
 }
 
 .previousPainting {
-    left: 1vmin;
+    right: 48%;
+    transform: translate(-50vmin, -50%);
 }
 
 .nextPainting {
-    right: 1vmin;
+    left: 48%;
+    transform: translate(50vmin, -50%);
+}
+
+.rotateTop, .rotateDown {
+    left: 50%;
+    transform: translateX(-50%);
+    transition: .5s;
 }
 
 .rotateTop {
-    top: -2vmin;
-    transition: .4s;
+    top: 1vmin;
 }
 
 .rotateDown {
     bottom: -10vmin;
-    transition: .4s;
 }
 
 .arrow {
@@ -304,33 +320,75 @@ a {
     top: 40%;
 }
 
-.clickable > div {
+.clickable > div, .clickable {
     border-color: black;
 }
 
-.clickable:hover > div {
+.clickable:hover > div, .clickable:hover {
     border-color: deepskyblue;
 }
 
-.clickable {
-    border-color: black;
-    animation: beat 1s infinite alternate;
-    box-shadow: 0 0 0 1px black;
-    transform-origin: center;
+/*Style and Positioning For Start-Up Gallery Doors*/
+
+.leftDoor, .rightDoor, .leftDoorGlass, .rightDoorGlass {
+    position: fixed;
+    height: 100vh;
+    width: 50vw;
+    top: 0;
+    z-index: 3;
 }
 
-.clickable:hover {
-    border-color: deepskyblue;
+.leftDoorGlass, .rightDoorGlass {
+    background-color: rgba(255, 255, 255, .4);
 }
 
-@keyframes beat {
-    to {
-        box-shadow: 0 0 0 3px black
-    }
+.leftDoor, .leftDoorGlass {
+    right: 50vw;
 }
 
-.nameplate h3 {
-    position: relative;
-    bottom: 3px;
-    left: 4px;
+.rightDoor, .rightDoorGlass {
+    left: 50vw;
+}
+
+.pleaseWaitSign {
+    background-color: rgb(109, 109, 109);
+    font-size: 20px;
+    color: white;
+    position: absolute;
+    box-sizing: border-box;
+    border: 20px solid transparent;
+    border-image: url(assets/images/placardFrame.png) 100 round;
+    text-align: center;
+    z-index: 4;
+    left: 50%;
+    animation: swing 4s linear infinite;
+    transform: translateX(-50%);
+    transition: 1s;
+    bottom: 30vh;
+}
+
+/*Animations for the Sliding Doors and Please Wait Sign*/
+@keyframes openLeft {
+    from {right: 50vw}
+    to {right: 200vw}
+}
+
+@keyframes openRight {
+    from {left: 50vw}
+    to {left: 200vw}
+}
+
+@keyframes fall {
+    0% {bottom: 30vh; transform-origin: top left}
+    10% {bottom: 25vh; transform: rotate(90deg)}
+    20% {bottom: -30vh; transform: rotate(180deg)}
+    100% {bottom: -50vh}
+}
+
+@keyframes swing {
+    0% {transform: translateX(-50%) rotate(0deg); transform-origin: top}
+    25% {transform: translateX(-50%) rotate(5deg)}
+    50% {transform: translateX(-50%) rotate(0deg)}
+    75% {transform: translateX(-50%) rotate(-5deg)}
+    100% {transform: translateX(-50%) rotate(0deg)}
 }

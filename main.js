@@ -402,7 +402,7 @@ function rotateTop() {
     $('.nextPainting, .previousPainting, .rotateTop, .rotateDown').removeClass('clickable').off();
     $('.gallery_column').css('transform','translate3d(-49vmin, 49vmin, 0) rotate3d(1, 0, 0, -90deg)');
     $('.rotateTop').css('top','-10vmin');
-    $('.rotateDown').css('bottom','-3vmin');
+    $('.rotateDown').css('bottom','1vmin');
     setTimeout(function() {
         $('.nextPainting').addClass('clickable').on("click", nextPainting);
         if (currentPainting > 0) {
@@ -411,6 +411,13 @@ function rotateTop() {
         $('.rotateTop').addClass('clickable').on("click", rotateTop);
         $('.rotateDown').addClass('clickable').on("click", rotateDown);
     }, 2000)
+}
+
+function openGalleryDoors() {
+    $('.leftDoor, .leftDoorGlass').css('animation','openLeft 5s ease-in');
+    $('.rightDoor, .rightDoorGlass').css('animation','openRight 5s ease-in');
+    $('.pleaseWaitSign').css('animation','fall 5s ease-in');
+    setTimeout(function() {$('.glassDoors').empty()}, 4500)
 }
 
 function rotateDown() {
@@ -440,6 +447,7 @@ $(document).ready(function() {
     }, 500);
     var timer = setInterval(function(){
         if(allPaintings.length > 5) {
+            openGalleryDoors();
             allPaintings[1].populatePage(3);
             allPaintings[2].populatePage(4);
             $(".nextPainting").addClass('clickable');
