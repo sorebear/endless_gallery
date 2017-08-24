@@ -447,11 +447,11 @@ function Painting() {
     this.populatePage = function(galleryWallNumber) {
         this.createImageDOM(this.paintingImage, '.gallery_wall_' + galleryWallNumber + ' .painting_image_div'); //put painting image in frame on dom
         this.createImageDOM(this.artistImage, ' .gallery_wall_' + galleryWallNumber + ' .artist_image_div'); //put artist image in frame on dom
-        $(".gallery_wall_" + galleryWallNumber + " .artistName").text(this.artistName);
-        $(".gallery_wall_" + galleryWallNumber + " .artistBio").text(this.artistBiography).scrollTop(0);
-        $(".gallery_wall_" + galleryWallNumber + " .map_image_div").append(this.paintingMap);
-        $(".gallery_wall_" + galleryWallNumber + " .nameplate h3").text(firstWordsUnderCharLim(22, this.paintingTitle));
-        $(".gallery_wall_" + galleryWallNumber + " .nameplate h3").attr("title", this.paintingTitle);
+        $(".gallery_wall_" + galleryWallNumber + " .artistName").text(this.artistName); //add artist name to container
+        $(".gallery_wall_" + galleryWallNumber + " .artistBio").text(this.artistBiography).scrollTop(0); //add artist bio to container
+        $(".gallery_wall_" + galleryWallNumber + " .map_image_div").append(this.paintingMap); //add map to DOM
+        $(".gallery_wall_" + galleryWallNumber + " .nameplate h3").text(firstWordsUnderCharLim(22, this.paintingTitle)); //place truncated title in container
+        $(".gallery_wall_" + galleryWallNumber + " .nameplate h3").attr("title", this.paintingTitle); //set alt text to full title
     };
     /*
      * Method to take in a string and return it with all instances of "x" replaced with "y"
@@ -487,11 +487,11 @@ function rotateGallery(newRotation) {
  */
 
 function rotateTop() {
-    $('.nextPainting, .previousPainting, .rotateTop, .rotateDown').removeClass('clickable').off();
-    $('.gallery_column').css('transform','translate3d(-49vmin, 49vmin, 0) rotate3d(1, 0, 0, -90deg)');
-    $('.rotateTop').css('top','-10vmin');
-    $('.rotateDown').css('bottom','-3vmin');
-    setTimeout(function() {
+    $('.nextPainting, .previousPainting, .rotateTop, .rotateDown').removeClass('clickable').off(); //remove click handlers
+    $('.gallery_column').css('transform','translate3d(-49vmin, 49vmin, 0) rotate3d(1, 0, 0, -90deg)'); //rotate to top of cube
+    $('.rotateTop').css('top','-10vmin'); //remove top button from view
+    $('.rotateDown').css('bottom','-3vmin'); //put bottom button within view
+    setTimeout(function() { //reapply click handlers
         $('.nextPainting').addClass('clickable').on("click", nextPainting);
         if (currentPainting > 0) {
             $('.previousPainting').addClass('clickable').on("click", previousPainting);
@@ -507,12 +507,12 @@ function rotateTop() {
  */
 
 function rotateDown() {
-    $('.nextPainting, .previousPainting, .rotateTop, .rotateDown').removeClass('clickable').off();
-    var currentRotation = $('.gallery_column').attr('rotation');
-    $('.rotateDown').css('bottom', '-10vmin');
-    $('.rotateTop').css('top', '-3vmin');
-    $('.gallery_column').css('transform','translate3d(-49vmin, 0, -49vmin) rotateY(' + currentRotation + 'deg)');
-    setTimeout(function() {
+    $('.nextPainting, .previousPainting, .rotateTop, .rotateDown').removeClass('clickable').off(); //remove click handlers
+    var currentRotation = $('.gallery_column').attr('rotation'); //set cube to face current face prior to looking at top of cube
+    $('.rotateDown').css('bottom', '-10vmin'); //put top button in view
+    $('.rotateTop').css('top', '-3vmin'); //remove bottom button from view
+    $('.gallery_column').css('transform','translate3d(-49vmin, 0, -49vmin) rotateY(' + currentRotation + 'deg)'); //retrun cube to prior face before looking at top
+    setTimeout(function() { //reapply click handlers
         $('.nextPainting').addClass('clickable').on("click", nextPainting);
         if (currentPainting > 0) {
             $('.previousPainting').addClass('clickable').on("click", previousPainting);
@@ -523,28 +523,47 @@ function rotateDown() {
 }
 
 /**
+ * Function to display Modal when clicking Painting
+ * @Param none
+ */
+
+function displayModal() {
+    var url = $("."+arguments[0].currentTarget.parentNode.parentNode.className+" ."+arguments[0].currentTarget.className+" .modalTarget").attr("style"); //find url of nested image in target element
+    var firstSubstringIndex = url.indexOf("(")+2; //find ( in url
+    var lastSubstringIndex = url.indexOf(")")-1; //find ) in url
+    console.log(url.substring(firstSubstringIndex, lastSubstringIndex)); //remove url in parentheses, accounting for quotations marks inside parentheses
+    $(".modal-content").attr("src", url.substring(firstSubstringIndex, lastSubstringIndex)); //set modal image to url of target
+    $("#myModal").css("display", "block"); //display modal
+    $("#myModal").on("click", function(){ //on click, remove modal and click handler from modal
+        $("#myModal").css("display", "none");
+        $("#myModal").off();
+    })
+}
+
+/**
  * Function to handle all actions that will occur on page load
  * @Param none
  */
 
 $(document).ready(function() {
-    allPaintings[0].populatePage(2);
-    $('.rotateTop').addClass('clickable').on('click', rotateTop);
-    $('.rotateDown').addClass('clickable').on('click', rotateDown);
-    paintingCreationTimer = setInterval(function() {
+    allPaintings[0].populatePage(2); //put splash page on face 2
+    $('.rotateTop').addClass('clickable').on('click', rotateTop); //apply click handler to rotate top button
+    $('.rotateDown').addClass('clickable').on('click', rotateDown); //apply click handler to rotate bottom button
+    paintingCreationTimer = setInterval(function() { //set interval to check if paintings need to be made, and ajax chain is not in progress
         if(paintingsRequested > 0 && ajaxChainInProgress === false) {
             getNewPainting();
         }
     }, 500);
-    var timer = setInterval(function(){
+    var timer = setInterval(function(){ //populate faces once at least 5 paintings have been created
         if(allPaintings.length > 5) {
             allPaintings[1].populatePage(3);
             allPaintings[2].populatePage(4);
             $(".nextPainting").addClass('clickable');
-            $(".nextPainting").on("click", nextPainting);
-            clearInterval(timer);
+            $(".nextPainting").on("click", nextPainting); //apply click handler for next painting button
+            $(".painting_container_div").on("click", displayModal);
+            $(".artist_container_div").on("click", displayModal);
+            clearInterval(timer); //clear interval to check if enough paintings have loaded
         }
     },250);
-    $(".previousPainting").on("click", previousPainting);
-
+    $(".previousPainting").on("click", previousPainting); //apply click handler for previous painting button
 });
