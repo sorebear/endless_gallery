@@ -20,7 +20,21 @@ var countAjax = 0;
  * @Global {Number}
  */
 
-var paintingsRequested = 6;
+var paintingsRequested = 10;
+
+/**
+ * Global Variable that will be interval to check if new paintings are needed
+ * @Global {Number}
+ */
+
+var paintingCreationTimer = null;
+
+/**
+ * Global Variable to store if Ajax Call chain is in progress
+ * @Global {Number}
+ */
+
+var ajaxChainInProgress = false;
 
 /**
  * Global Variable to store information to build initial Splash Page
@@ -45,6 +59,7 @@ allPaintings.push(splashPage);
  * @return {JSON} Paiting image, painting title, painting ID, and gallery name (with conditional to check if empty)
  */
 function getNewPainting(){
+    ajaxChainInProgress = true;
     $.ajax({ //Random artwork lookup
         url: "https://api.artsy.net/api/artworks?sample",
         method: "GET",
@@ -63,12 +78,11 @@ function getNewPainting(){
  * @return {undefined}
  */
 function startAjaxBranches (response) {
-    if (response.collecting_institution === "") {
+    if (response.collecting_institution === "" || !("image" in response._links)) {
         return getNewPainting();
     }
     var painting = new Painting();
     allPaintings.push(painting);
-    countAjax++;
     getPaintingArtist(response);
     getGalleryLocation(response);
 }
@@ -79,8 +93,13 @@ function startAjaxBranches (response) {
  * @return {JSON} Artist name and artist image
  */
 function getPaintingArtist(response) {
+    ++countAjax;
     allPaintings[allPaintings.length - 1].paintingID = response.id;
-    allPaintings[allPaintings.length - 1].paintingTitle = response.title;
+    try{
+        allPaintings[allPaintings.length - 1].paintingTitle = response.title;
+    } catch(err) {
+        allPaintings[allPaintings.length - 1].paintingTitle = "Untitled";
+    }
     allPaintings[allPaintings.length - 1].paintingImage = allPaintings[allPaintings.length - 1].setPaintingSize(response._links.image.href, "large");
     $.ajax({  //Artist Lookup
         url: "https://api.artsy.net/api/artists",
@@ -103,6 +122,7 @@ function getPaintingArtist(response) {
  * @return {number} Latitude and Longitude of the gallery
  */
 function getGalleryLocation(response) {
+    ++countAjax;
     allPaintings[allPaintings.length - 1].paintingGallery = response.collecting_institution;
     $.ajax({ //Geocoding API
         url: "https://maps.googleapis.com/maps/api/geocode/json",
@@ -123,7 +143,6 @@ function getGalleryLocation(response) {
  * @return {jQuery Object} jQuery wrapped DOM element to add to container div
  */
 function getGalleryMap(response){
-    countAjax++;
     allPaintings[allPaintings.length - 1].galleryCoordinates.latitude = response.results[0].geometry.location.lat;
     allPaintings[allPaintings.length - 1].galleryCoordinates.longitude = response.results[0].geometry.location.lng;
     var urlStr = "https://www.google.com/maps/embed/v1/view?key=AIzaSyDWPRK37JSNxBhmLhEbWzCQ57MQBQu8atk&center=" + allPaintings[allPaintings.length - 1].galleryCoordinates.latitude + "," + allPaintings[allPaintings.length - 1].galleryCoordinates.longitude + "&zoom=18&maptype=satellite";
@@ -153,9 +172,16 @@ function getMapElement(lat, long){
  * @return {JSON} Artist's short biography from Wikipedia
  */
 function getArtistBio(response) {
-    countAjax++;
-    allPaintings[allPaintings.length - 1].artistImage = allPaintings[allPaintings.length - 1].setPaintingSize(response._embedded.artists[0]._links.image.href, "square");
-    allPaintings[allPaintings.length - 1].artistName = response._embedded.artists[0].name;
+    try{
+        allPaintings[allPaintings.length - 1].artistImage = allPaintings[allPaintings.length - 1].setPaintingSize(response._embedded.artists[0]._links.image.href, "square");
+    } catch(err) {
+        allPaintings[allPaintings.length - 1].artistImage = "assets/images/unknownArtist.png";
+    }
+    try{
+        allPaintings[allPaintings.length - 1].artistName = response._embedded.artists[0].name;
+    } catch(err) {
+        allPaintings[allPaintings.length - 1].artistName = "Unknown Artist";
+    }
     $.ajax({ //get first passage of Wikipedia of Artist
         url: "https://en.wikipedia.org/w/api.php",
         method: "GET",
@@ -180,14 +206,11 @@ function successArtistBio (response) {
 }
 
 function checkForAjaxCompletion () {
-    countAjax++;
-    if(countAjax === 5) {
-        countAjax = 0;
+    --countAjax;
+    if(countAjax === 0) {
         paintingsRequested--;
         console.log(allPaintings[allPaintings.length-1]);
-        if(paintingsRequested > 0) {
-            getNewPainting();
-        }
+        ajaxChainInProgress = false;
     }
 }
 
@@ -239,7 +262,6 @@ function nextPainting(){
     $galleryColumn.attr('currentFace', (currentFace+1));
     reset("gallery_wall_" + faceToChange);
     paintingsRequested++;
-    getNewPainting();
     currentPainting++;
     allPaintings[currentPainting + 2].populatePage(faceToChange);
     setTimeout(function() {
@@ -346,16 +368,10 @@ function Painting() {
      */
     this.populatePage = function(galleryWallNumber) {
         this.createImageDOM(this.paintingImage, '.gallery_wall_' + galleryWallNumber + ' .painting_image_div');
-        if (!this.artistImage) {
-            this.createImageDOM("assets/images/unknownArtist.png", ' .gallery_wall_' + galleryWallNumber + ' .artist_image_div');
-        } else {
-            this.createImageDOM(this.artistImage, ' .gallery_wall_' + galleryWallNumber + ' .artist_image_div');
-        }
-        if(!this.artistName) this.artistName = "Unknown Artist";
+        this.createImageDOM(this.artistImage, ' .gallery_wall_' + galleryWallNumber + ' .artist_image_div');
         $(".gallery_wall_" + galleryWallNumber + " .artistName").text(this.artistName);
         $(".gallery_wall_" + galleryWallNumber + " .artistBio").text(this.artistBiography).scrollTop(0);
         $(".gallery_wall_" + galleryWallNumber + " .map_image_div").append(this.paintingMap);
-        if(!this.paintingTitle) this.paintingTitle = "Untitled";
         $(".gallery_wall_" + galleryWallNumber + " .nameplate h3").text(firstWordsUnderCharLim(22, this.paintingTitle));
         $(".gallery_wall_" + galleryWallNumber + " .nameplate h3").attr("title", this.paintingTitle);
     };
@@ -417,9 +433,13 @@ $(document).ready(function() {
     allPaintings[0].populatePage(2);
     $('.rotateTop').addClass('clickable').on('click', rotateTop);
     $('.rotateDown').addClass('clickable').on('click', rotateDown);
-    getNewPainting();
+    paintingCreationTimer = setInterval(function() {
+        if(paintingsRequested > 0 && ajaxChainInProgress === false) {
+            getNewPainting();
+        }
+    }, 500);
     var timer = setInterval(function(){
-        if(allPaintings.length > 3) {
+        if(allPaintings.length > 5) {
             allPaintings[1].populatePage(3);
             allPaintings[2].populatePage(4);
             $(".nextPainting").addClass('clickable');
