@@ -20,7 +20,7 @@ var countAjax = 0;
  * @Global {Number}
  */
 
-var paintingsRequested = 4;
+var paintingsRequested = 6;
 
 /**
  * Global Variable to store information to build initial Splash Page
@@ -80,11 +80,7 @@ function startAjaxBranches (response) {
  */
 function getPaintingArtist(response) {
     allPaintings[allPaintings.length - 1].paintingID = response.id;
-    if(response.title === '' || response.title === undefined || response.title === null) {
-        allPaintings[allPaintings.length - 1].paintingTitle = "Untitled";
-    } else {
-        allPaintings[allPaintings.length - 1].paintingTitle = response.title;
-    }
+    allPaintings[allPaintings.length - 1].paintingTitle = response.title;
     allPaintings[allPaintings.length - 1].paintingImage = allPaintings[allPaintings.length - 1].setPaintingSize(response._links.image.href, "large");
     $.ajax({  //Artist Lookup
         url: "https://api.artsy.net/api/artists",
@@ -159,12 +155,16 @@ function getMapElement(lat, long){
 function getArtistBio(response) {
     countAjax++;
     allPaintings[allPaintings.length - 1].artistImage = allPaintings[allPaintings.length - 1].setPaintingSize(response._embedded.artists[0]._links.image.href, "square");
+<<<<<<< HEAD
     if(response._embedded.artists[0].name === '' || response._embedded.artists[0].name === undefined || response._embedded.artists[0].name === null) {
         allPaintings[allPaintings.length - 1].artistName = "Mystery Artist";
     }
     else {
         allPaintings[allPaintings.length - 1].artistName = response._embedded.artists[0].name;
     }
+=======
+    allPaintings[allPaintings.length - 1].artistName = response._embedded.artists[0].name;
+>>>>>>> f2ef6fe51e82f1b673090ec675d964fe1ae3ab52
     $.ajax({ //get first passage of Wikipedia of Artist
         url: "https://en.wikipedia.org/w/api.php",
         method: "GET",
@@ -201,7 +201,9 @@ function checkForAjaxCompletion () {
 }
 
 function previousPainting(){
-    if(currentPainting - 1 < 0) return;
+    $('.previousPainting, .nextPainting, .rotateTop, .rotateDown').off().removeClass('clickable');
+    $('.rotateDown').css('bottom', '-10vmin');
+    $('.rotateTop').css('top', '-3vmin');
     var $galleryColumn = $('.gallery_column');
     var newRotation = parseInt($galleryColumn.attr('rotation')) + 90;
     $galleryColumn.attr('rotation', newRotation);
@@ -218,8 +220,19 @@ function previousPainting(){
     reset("gallery_wall_" + faceToChange);
     currentPainting--;
     allPaintings[currentPainting].populatePage(faceToChange);
+    setTimeout(function() {
+        $('.nextPainting').addClass('clickable').on("click", nextPainting);
+        $('.rotateTop').addClass('clickable').on("click", rotateTop);
+        $('.rotateDown').addClass('clickable').on("click", rotateDown);
+        if (currentPainting > 0) {
+            $('.previousPainting').addClass('clickable').on("click", previousPainting);
+        }
+    }, 2000);
 }
 function nextPainting(){
+    $('.previousPainting, .nextPainting, .rotateTop, .rotateDown').off().removeClass('clickable');
+    $('.rotateDown').css('bottom', '-10vmin');
+    $('.rotateTop').css('top', '-3vmin');
     var $galleryColumn = $('.gallery_column');
     var newRotation = parseInt($galleryColumn.attr('rotation')) - 90;
     $galleryColumn.attr('rotation', newRotation);
@@ -238,6 +251,12 @@ function nextPainting(){
     getNewPainting();
     currentPainting++;
     allPaintings[currentPainting + 2].populatePage(faceToChange);
+    setTimeout(function() {
+        $('.rotateDown').addClass('clickable').on("click", nextPainting);
+        $('.rotateTop').addClass('clickable').on("click", rotateTop);
+        $('.nextPainting').addClass('clickable').on("click", nextPainting);
+        $('.previousPainting').addClass('clickable').on("click", previousPainting);
+    }, 2000)
 }
 
 function errorFunction(){
@@ -252,7 +271,20 @@ function reset(gallery_wall){
     $('.' + gallery_wall + ' .artistBio').text('');
     $('.' + gallery_wall + ' .map_image_div').empty();
 }
-
+/**
+ * Function to return the first words of a string under a specified char limit
+ * @param char_lim
+ * @param  str
+ * @return {string}
+ */
+function firstWordsUnderCharLim(char_lim, str){
+    if(str.length <= char_lim) return str;
+    var return_str = '';
+    for(var i=0; i< char_lim - 3; i++){
+        return_str += str[i];
+    }
+    return return_str + "...";
+}
 /**
  * Creates an instance of Painting
  *
@@ -323,10 +355,18 @@ function Painting() {
      */
     this.populatePage = function(galleryWallNumber) {
         this.createImageDOM(this.paintingImage, '.gallery_wall_' + galleryWallNumber + ' .painting_image_div');
-        this.createImageDOM(this.artistImage, ' .gallery_wall_' + galleryWallNumber + ' .artist_image_div');
+        if (!this.artistImage) {
+            this.createImageDOM("assets/images/unknownArtist.png", ' .gallery_wall_' + galleryWallNumber + ' .artist_image_div');
+        } else {
+            this.createImageDOM(this.artistImage, ' .gallery_wall_' + galleryWallNumber + ' .artist_image_div');
+        }
+        if(!this.artistName) this.artistName = "Unknown Artist";
         $(".gallery_wall_" + galleryWallNumber + " .artistName").text(this.artistName);
         $(".gallery_wall_" + galleryWallNumber + " .artistBio").text(this.artistBiography).scrollTop(0);
         $(".gallery_wall_" + galleryWallNumber + " .map_image_div").append(this.paintingMap);
+        if(!this.paintingTitle) this.paintingTitle = "Untitled";
+        $(".gallery_wall_" + galleryWallNumber + " .nameplate h3").text(firstWordsUnderCharLim(22, this.paintingTitle));
+        $(".gallery_wall_" + galleryWallNumber + " .nameplate h3").attr("title", this.paintingTitle);
     };
     /*
      * Method to take in a string and return it with all instances of "x" replaced with "y"
@@ -347,36 +387,51 @@ function Painting() {
     }
 }
 
-function rotateGalleryRight() {
-    $('.gallery_column').css('transform','translate3d(-49vmin, 0, -49vmin) rotateY(90deg)');
-}
-
-function rotateGalleryLeft() {
-    $('.gallery_column').css('transform','translate3d(-49vmin, 0, -49vmin) rotateY(-90deg)');
-}
-
-function rotateGalleryToBack() {
-    $('.gallery_column').css('transform','translate3d(-49vmin, 0, -49vmin) rotateY(180deg)');
-}
-
-function rotateGalleryToFront() {
-    $('.gallery_column').css('transform','translate3d(-49vmin, 0, -49vmin) rotateY(0deg)');
-}
-
 function rotateGallery(newRotation) {
     $('.gallery_column').css('transform','translate3d(-49vmin, 0, -49vmin) rotateY(' + newRotation + 'deg)');
 }
 
+function rotateTop() {
+    $('.nextPainting, .previousPainting, .rotateTop, .rotateDown').removeClass('clickable').off();
+    $('.gallery_column').css('transform','translate3d(-49vmin, 49vmin, 0) rotate3d(1, 0, 0, -90deg)');
+    $('.rotateTop').css('top','-10vmin');
+    $('.rotateDown').css('bottom','-3vmin');
+    setTimeout(function() {
+        $('.nextPainting').addClass('clickable').on("click", nextPainting);
+        if (currentPainting > 0) {
+            $('.previousPainting').addClass('clickable').on("click", previousPainting);
+        }
+        $('.rotateTop').addClass('clickable').on("click", rotateTop);
+        $('.rotateDown').addClass('clickable').on("click", rotateDown);
+    }, 2000)
+}
 
+function rotateDown() {
+    $('.nextPainting, .previousPainting, .rotateTop, .rotateDown').removeClass('clickable').off();
+    var currentRotation = $('.gallery_column').attr('rotation');
+    $('.rotateDown').css('bottom', '-10vmin');
+    $('.rotateTop').css('top', '-3vmin');
+    $('.gallery_column').css('transform','translate3d(-49vmin, 0, -49vmin) rotateY(' + currentRotation + 'deg)');
+    setTimeout(function() {
+        $('.nextPainting').addClass('clickable').on("click", nextPainting);
+        if (currentPainting > 0) {
+            $('.previousPainting').addClass('clickable').on("click", previousPainting);
+        }
+        $('.rotateTop').addClass('clickable').on("click", rotateTop);
+        $('.rotateDown').addClass('clickable').on("click", rotateDown);
+    }, 2000)
+}
 
 $(document).ready(function() {
-    allPaintings[0].populatePage(1);
     allPaintings[0].populatePage(2);
+    $('.rotateTop').addClass('clickable').on('click', rotateTop);
+    $('.rotateDown').addClass('clickable').on('click', rotateDown);
     getNewPainting();
     var timer = setInterval(function(){
         if(allPaintings.length > 3) {
             allPaintings[1].populatePage(3);
             allPaintings[2].populatePage(4);
+            $(".nextPainting").addClass('clickable');
             $(".nextPainting").on("click", nextPainting);
             clearInterval(timer);
         }

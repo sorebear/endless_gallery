@@ -4,7 +4,7 @@ button {
 
 
 .content_container {
-    background-image: url(assets/images/gallery2.png);
+    background-image: url(assets/images/gallery3.jpg);
     margin: 0;
     width: 100vw;
     height: 100vh;
@@ -14,6 +14,7 @@ button {
     position: absolute;
     background-position: center;
     perspective: 3000px;
+    background-size: cover;
     top: 0;
     left: 0;
 }
@@ -24,16 +25,15 @@ button {
     transform-origin: 49vmin 0 -49vmin;
     position: absolute;
     transform-style: preserve-3d;
-    transition: 3s;
+    transition: 1.9s;
 }
 
-.gallery_wall_1, .gallery_wall_2, .gallery_wall_3, .gallery_wall_4 {
+.gallery_wall_1, .gallery_wall_2, .gallery_wall_3, .gallery_wall_4, .gallery_top, .gallery_bottom {
     position: absolute;
     top: 0;
     height: 100%;
     background-image: url(assets/images/witewall_3.png);
-    box-sizing: border-box;
-    box-shadow: 2px 0 10px 1px grey;
+    border: 2px solid antiquewhite;
 }
 
 .gallery_wall_1 {
@@ -50,6 +50,37 @@ button {
 
 .gallery_wall_4 {
     transform: translate3d(0, 0, -98vmin) rotate3d(0, 1, 0, 180deg);
+}
+
+.gallery_top {
+    transform: translate3d(0, -49vmin, -49vmin) rotate3d(1, 0, 0, 90deg);
+    width: 98vmin;
+    height: 98vmin;
+    display: flex;
+    justify-content: center;
+}
+
+.textbox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
+}
+
+.topRow {
+    display: flex;
+    justify-content: space-between;
+}
+
+.topRow > p {
+    margin: 5px;
+}
+a {
+    color: black;
+}
+
+.gallery_bottom {
+
 }
 
 .gallery_container_div {
@@ -86,7 +117,7 @@ button {
     justify-content:  center;
     width: 90%;
     height: 90%;
-    background-image: url(assets/images/cheap_diagonal_fabric.png);
+    background-image: url(assets/images/tweed.png);
     border: 30px solid transparent;
     box-sizing: border-box;
 }
@@ -109,7 +140,7 @@ button {
 }
 
 .map_frame_div {
-    background-image: url('assets/images/tealFrameWide.png');
+    background-image: url('assets/images/blackFrame.png');
     background-size: contain;
     position: absolute;
     width: 100%;
@@ -119,13 +150,12 @@ button {
 
 .map_image_div {
     position: absolute;
-    width: 81%;
-    height: 76%;
+    width: 89%;
+    height: 77%;
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1;
-    box-shadow: 0 0 1px 3px white;
 }
 
 
@@ -140,6 +170,7 @@ button {
 
 .artist_image_div {
     border-radius: 100%;
+    background-size: contain;
     position: absolute;
     width: 65%;
     height: 65%;
@@ -166,18 +197,16 @@ button {
 .artist_info_text {
     width: 95%;
     max-height: 100%;
-    background-color: dimgray;
+    background-color: rgb(109, 109, 109);
     color: white;
     position: absolute;
     box-sizing: border-box;
-    border-width: 10px;
-    border-color: darkgray;
-    border-style: inset;
+    border: 20px solid transparent;
+    border-image: url(assets/images/placardFrame.png) 100 round;
     font-family: 'Lora', serif;
     text-align: center;
     overflow: scroll;
     overflow-x: hidden;
-    padding: 0 6%;
 }
 .artistName, .artistBio {
     color: rgba(0,0,0,0.6);
@@ -193,12 +222,116 @@ button {
     background: transparent;
 }
 
-.button_ctn{
-    display:flex;
-    justify-content: space-between;
-    width: 100%;
+.nameplate {
+    position: absolute;
+    bottom: -160px;
+    background-image: url(assets/images/nameplate.png);
+    height: 70.56%;
+    width: 60%;
+    background-size: contain;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
 }
-.button_ctn div{
-    border: solid 1px black;
-    border-radius: 5px;
+
+.buttonDiv {
+    height: 50px;
+    width: 50px;
+    border: 3px solid grey;
+    border-radius: 100%;
+    position: fixed;
+}
+
+.previousPainting, .nextPainting {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.previousPainting {
+    left: 1vmin;
+}
+
+.nextPainting {
+    right: 1vmin;
+}
+
+.rotateTop {
+    top: -3vmin;
+    transition: .4s;
+}
+
+.rotateTop:hover {
+    top: 0;
+}
+
+.rotateDown {
+    bottom: -10vmin;
+    transition: .4s;
+}
+
+.rotateDown:hover {
+    bottom: 0vmin;
+}
+
+.arrow {
+    position: absolute;
+    border-color: grey;
+    border-style: solid;
+    height: 40%;
+    width: 40%;
+
+}
+
+.leftArrow, .rightArrow {
+    transform: translate(-50%, -50%) rotate(45deg);
+    top: 50%;
+}
+
+.topArrow, .downArrow {
+    transform: translate(-50%, -50%) rotate(45deg);
+    left: 50%;
+}
+
+.leftArrow {
+    border-width: 0 0 3px 3px;
+    left: 60%;
+}
+
+.rightArrow {
+    left: 40%;
+    border-width: 3px 3px 0 0;
+}
+
+.topArrow {
+    top: 60%;
+    border-width: 3px 0 0 3px;
+}
+
+.downArrow {
+    border-width: 0 3px 3px 0;
+    top: 40%;
+}
+
+.clickable > div {
+    border-color: black;
+}
+
+.clickable {
+    border-color: black;
+    animation: beat 1s infinite alternate;
+    box-shadow: 0 0 0 1px black;
+    transform-origin: center;
+}
+
+@keyframes beat {
+    to {
+        box-shadow: 0 0 0 3px black
+    }
+}
+
+.nameplate h3 {
+    position: relative;
+    bottom: 3px;
+    left: 4px;
 }
