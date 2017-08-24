@@ -257,21 +257,13 @@ a {
 }
 
 .rotateTop {
-    top: -3vmin;
+    top: -2vmin;
     transition: .4s;
-}
-
-.rotateTop:hover {
-    top: 0;
 }
 
 .rotateDown {
     bottom: -10vmin;
     transition: .4s;
-}
-
-.rotateDown:hover {
-    bottom: 0vmin;
 }
 
 .arrow {
@@ -280,7 +272,6 @@ a {
     border-style: solid;
     height: 40%;
     width: 40%;
-
 }
 
 .leftArrow, .rightArrow {
@@ -317,11 +308,19 @@ a {
     border-color: black;
 }
 
+.clickable:hover > div {
+    border-color: deepskyblue;
+}
+
 .clickable {
     border-color: black;
     animation: beat 1s infinite alternate;
     box-shadow: 0 0 0 1px black;
     transform-origin: center;
+}
+
+.clickable:hover {
+    border-color: deepskyblue;
 }
 
 @keyframes beat {
