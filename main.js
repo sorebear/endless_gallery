@@ -190,6 +190,7 @@ function getArtistBio(response) {
     }
     try{ //try to set artist name to name in response
         allPaintings[allPaintings.length - 1].artistName = response._embedded.artists[0].name;
+        getArtistImage(response._embedded.artists[0].name);
     } catch(err) { //if no name, catch with Unknown Artist
         allPaintings[allPaintings.length - 1].artistName = "Unknown Artist";
     }
@@ -208,6 +209,46 @@ function getArtistBio(response) {
         success: successArtistBio, //handle information returned from Ajax call
         error: errorFunction
     });
+}
+
+function getArtistImage(artist_name){
+    countAjax++;
+    $.ajax({ //get first passage of Wikipedia of Artist
+        url: "https://en.wikipedia.org/w/api.php",
+        method: "GET",
+        dataType: "jsonp",
+        data: {
+            action: "query",
+            titles: artist_name,
+            format: "json",
+            prop: "pageimages",
+            pithumbsize: 200
+            //prop: "text|images",
+            //exintro: true,
+            //explaintext: true
+        },
+        success: successArtistImage,
+        error: errorArtistImage
+    });
+}
+function successArtistImage(response){
+    var pagesKeys = Object.keys(response.query.pages);
+    try{
+        allPaintings[allPaintings.length - 1].artistImage = response.query.pages[pagesKeys[0]].thumbnail.source;
+    }
+    catch(err){
+        console.log(err);
+    }
+    checkForAjaxCompletion();
+
+}
+function errorArtistImage(response){
+    console.log("Error querying Mediawiki for artist image", response);
+}
+function addSpacesToInitialNames(str){
+    for(var i = 0; i<str.length; i++){
+
+    }
 }
 
 /**
