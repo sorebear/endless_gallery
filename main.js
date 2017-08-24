@@ -301,12 +301,13 @@ function previousPainting(){
     $galleryColumn.attr('currentFace', (currentFace-1)); //set current face to decremented value of prior value
     reset("gallery_wall_" + faceToChange); //reset gallery wall two spaces back to remove load time
     currentPainting--; //decrement current painting
-    allPaintings[currentPainting-1].populatePage(faceToChange); //populate page that was reset with painting at place prior to current painting value
+
     setTimeout(function() { //reapply click handlers when animation is done
         $('.nextPainting').addClass('clickable').on("click", nextPainting);
         $('.rotateTop').addClass('clickable').on("click", rotateTop);
         $('.rotateDown').addClass('clickable').on("click", rotateDown);
         if (currentPainting > 0) { //if on splash page, do not enable previous painting click handler
+            allPaintings[currentPainting-1].populatePage(faceToChange); //populate page that was reset with painting at place prior to current painting value
             $('.previousPainting').addClass('clickable').on("click", previousPainting);
         }
     }, 2000);
@@ -565,7 +566,7 @@ $(document).ready(function() {
         }
     }, 500);
     var timer = setInterval(function(){ //populate faces once at least 5 paintings have been created
-        if(allPaintings.length > 5) {
+        if(allPaintings.length > 4) {
             openGalleryDoors();
             allPaintings[1].populatePage(3);
             allPaintings[2].populatePage(4);
