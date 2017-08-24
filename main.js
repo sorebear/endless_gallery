@@ -226,6 +226,7 @@ function getArtistImage(artist_name){
  * @param response
  */
 function successArtistImage(response){
+
     var pagesKeys = Object.keys(response.query.pages);
     try{
         allPaintings[allPaintings.length - 1].artistImage = response.query.pages[pagesKeys[0]].thumbnail.source;
@@ -271,7 +272,7 @@ function checkForAjaxCompletion () {
 function previousPainting(){
     $('.previousPainting, .nextPainting, .rotateTop, .rotateDown').off().removeClass('clickable'); //remove click handlers on button
     $('.rotateDown').css('bottom', '-10vmin'); //bottom click leave view
-    $('.rotateTop').css('top', '-3vmin'); //put top button within view
+    $('.rotateTop').css('top', '-2vmin'); //put top button within view
     var $galleryColumn = $('.gallery_column'); //remember gallery column
     var newRotation = parseInt($galleryColumn.attr('rotation')) + 90; //parse integer of prior rotation then add 90 degrees to account for new rotation
     $galleryColumn.attr('rotation', newRotation); //set rotation to new degree value
@@ -287,12 +288,13 @@ function previousPainting(){
     $galleryColumn.attr('currentFace', (currentFace-1)); //set current face to decremented value of prior value
     reset("gallery_wall_" + faceToChange); //reset gallery wall two spaces back to remove load time
     currentPainting--; //decrement current painting
-    allPaintings[currentPainting-1].populatePage(faceToChange); //populate page that was reset with painting at place prior to current painting value
+
     setTimeout(function() { //reapply click handlers when animation is done
         $('.nextPainting').addClass('clickable').on("click", nextPainting);
         $('.rotateTop').addClass('clickable').on("click", rotateTop);
         $('.rotateDown').addClass('clickable').on("click", rotateDown);
         if (currentPainting > 0) { //if on splash page, do not enable previous painting click handler
+            allPaintings[currentPainting-1].populatePage(faceToChange); //populate page that was reset with painting at place prior to current painting value
             $('.previousPainting').addClass('clickable').on("click", previousPainting);
         }
     }, 2000);
@@ -304,7 +306,7 @@ function previousPainting(){
 function nextPainting(){
     $('.previousPainting, .nextPainting, .rotateTop, .rotateDown').off().removeClass('clickable'); //remove click handlers
     $('.rotateDown').css('bottom', '-10vmin'); //bottom click leave view
-    $('.rotateTop').css('top', '-3vmin'); //put top button within view
+    $('.rotateTop').css('top', '-2vmin'); //put top button within view
     var $galleryColumn = $('.gallery_column');
     var newRotation = parseInt($galleryColumn.attr('rotation')) - 90; //parse integer of prior rotation then subtract 90 degrees to account for new rotation
     $galleryColumn.attr('rotation', newRotation);
@@ -319,7 +321,7 @@ function nextPainting(){
     }
     $galleryColumn.attr('currentFace', (currentFace+1)); //set current face to incremented value of prior value
     reset("gallery_wall_" + faceToChange); //reset gallery wall three spaces forward to remove load time
-    paintingsRequested++; //request another painting to be made
+    paintingsRequested += 2; //request another painting to be made
     currentPainting++;
     allPaintings[currentPainting + 2].populatePage(faceToChange); //populate face that was reset
     setTimeout(function() { //apply click handlers
@@ -335,6 +337,8 @@ function nextPainting(){
  */
 function errorFunction(err){
     console.log("There was an error: ", err);
+    allPaintings.pop();
+    ajaxChainInProgress = false;
 }
 /**
  * Clears a gallery wall
@@ -465,11 +469,11 @@ function rotateGallery(newRotation) {
  * @Param none
  */
 function rotateTop() {
-    $('.nextPainting, .previousPainting, .rotateTop, .rotateDown').removeClass('clickable').off(); //remove click handlers
-    $('.gallery_column').css('transform','translate3d(-49vmin, 49vmin, 0) rotate3d(1, 0, 0, -90deg)'); //rotate to top of cube
-    $('.rotateTop').css('top','-10vmin'); //remove top button from view
-    $('.rotateDown').css('bottom','-3vmin'); //put bottom button within view
-    setTimeout(function() { //reapply click handlers
+    $('.nextPainting, .previousPainting, .rotateTop, .rotateDown').removeClass('clickable').off();
+    $('.gallery_column').css('transform','translate3d(-49vmin, 49vmin, 0) rotate3d(1, 0, 0, -90deg)');
+    $('.rotateTop').css('top','-10vmin');
+    $('.rotateDown').css('bottom','1vmin');
+    setTimeout(function() {
         $('.nextPainting').addClass('clickable').on("click", nextPainting);
         if (currentPainting > 0) {
             $('.previousPainting').addClass('clickable').on("click", previousPainting);
@@ -477,6 +481,14 @@ function rotateTop() {
         $('.rotateTop').addClass('clickable').on("click", rotateTop);
         $('.rotateDown').addClass('clickable').on("click", rotateDown);
     }, 2000)
+};
+
+
+function openGalleryDoors() {
+    $('.leftDoor, .leftDoorGlass').css('animation','openLeft 5s ease-in');
+    $('.rightDoor, .rightDoorGlass').css('animation','openRight 5s ease-in');
+    $('.pleaseWaitSign').css('animation','fall 5s ease-in');
+    setTimeout(function() {$('.glassDoors').empty()}, 4500)
 }
 /**
  * Function to rotate gallery down from top of cube
@@ -486,7 +498,7 @@ function rotateDown() {
     $('.nextPainting, .previousPainting, .rotateTop, .rotateDown').removeClass('clickable').off(); //remove click handlers
     var currentRotation = $('.gallery_column').attr('rotation'); //set cube to face current face prior to looking at top of cube
     $('.rotateDown').css('bottom', '-10vmin'); //put top button in view
-    $('.rotateTop').css('top', '-3vmin'); //remove bottom button from view
+    $('.rotateTop').css('top', '-2vmin'); //remove bottom button from view
     $('.gallery_column').css('transform','translate3d(-49vmin, 0, -49vmin) rotateY(' + currentRotation + 'deg)'); //retrun cube to prior face before looking at top
     setTimeout(function() { //reapply click handlers
         $('.nextPainting').addClass('clickable').on("click", nextPainting);
@@ -527,7 +539,8 @@ $(document).ready(function() {
         }
     }, 500);
     var timer = setInterval(function(){ //populate faces once at least 5 paintings have been created
-        if(allPaintings.length > 5) {
+        if(allPaintings.length > 4) {
+            openGalleryDoors();
             allPaintings[1].populatePage(3);
             allPaintings[2].populatePage(4);
             $(".nextPainting").addClass('clickable');
