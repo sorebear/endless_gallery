@@ -482,6 +482,24 @@ function rotateDown() {
 }
 
 /**
+ * Function to display Modal when clicking Painting
+ * @Param none
+ */
+
+function displayModal() {
+    var url = $("."+arguments[0].currentTarget.parentNode.parentNode.className+" ."+arguments[0].currentTarget.className+" .modalTarget").attr("style"); //find url of nested image in target element
+    var firstSubstringIndex = url.indexOf("(")+2; //find ( in url
+    var lastSubstringIndex = url.indexOf(")")-1; //find ) in url
+    console.log(url.substring(firstSubstringIndex, lastSubstringIndex)); //remove url in parentheses, accounting for quotations marks inside parentheses
+    $(".modal-content").attr("src", url.substring(firstSubstringIndex, lastSubstringIndex)); //set modal image to url of target
+    $("#myModal").css("display", "block"); //display modal
+    $("#myModal").on("click", function(){ //on click, remove modal and click handler from modal
+        $("#myModal").css("display", "none");
+        $("#myModal").off();
+    })
+}
+
+/**
  * Function to handle all actions that will occur on page load
  * @Param none
  */
@@ -501,6 +519,8 @@ $(document).ready(function() {
             allPaintings[2].populatePage(4);
             $(".nextPainting").addClass('clickable');
             $(".nextPainting").on("click", nextPainting); //apply click handler for next painting button
+            $(".painting_container_div").on("click", displayModal);
+            $(".artist_container_div").on("click", displayModal);
             clearInterval(timer); //clear interval to check if enough paintings have loaded
         }
     },250);
