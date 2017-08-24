@@ -155,16 +155,7 @@ function getMapElement(lat, long){
 function getArtistBio(response) {
     countAjax++;
     allPaintings[allPaintings.length - 1].artistImage = allPaintings[allPaintings.length - 1].setPaintingSize(response._embedded.artists[0]._links.image.href, "square");
-<<<<<<< HEAD
-    if(response._embedded.artists[0].name === '' || response._embedded.artists[0].name === undefined || response._embedded.artists[0].name === null) {
-        allPaintings[allPaintings.length - 1].artistName = "Mystery Artist";
-    }
-    else {
-        allPaintings[allPaintings.length - 1].artistName = response._embedded.artists[0].name;
-    }
-=======
     allPaintings[allPaintings.length - 1].artistName = response._embedded.artists[0].name;
->>>>>>> f2ef6fe51e82f1b673090ec675d964fe1ae3ab52
     $.ajax({ //get first passage of Wikipedia of Artist
         url: "https://en.wikipedia.org/w/api.php",
         method: "GET",
