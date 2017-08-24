@@ -198,7 +198,9 @@ a {
 
 .artist_image_div {
     border-radius: 100%;
-    background-size: contain;
+    background-size: cover;
+    background-position-x: center;
+    background-position-y: center;
     position: absolute;
     width: 65%;
     height: 65%;
@@ -264,7 +266,6 @@ a {
 
 .previousPainting, .nextPainting {
     top: 50%;
-    transition: .5s;
 }
 
 .previousPainting {
@@ -280,7 +281,6 @@ a {
 .rotateTop, .rotateDown {
     left: 50%;
     transform: translateX(-50%);
-    transition: .5s;
 }
 
 .rotateTop {
@@ -426,4 +426,18 @@ a {
     left: 50%;
     transform: translate(-50%, -50%);
     height: 60%;
+}
+
+@media screen and (max-width: 1000px) {
+    .previousPainting {
+        right: inherit;
+        left: 1vw;
+        transform: translateY(-50%);
+    }
+
+    .nextPainting {
+        left: inherit;
+        right: 1vw;
+        transform: translateY(-50%);
+    }
 }
