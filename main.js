@@ -65,7 +65,7 @@ function getNewPainting(){
         method: "GET",
         dataType: "json",
         headers: {
-            "X-Xapp-Token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6IiIsImV4cCI6MTUwMzk0NzkxNiwiaWF0IjoxNTAzMzQzMTE2LCJhdWQiOiI1OTliMzIwYzljMThkYjZmNzlkN2ViNmYiLCJpc3MiOiJHcmF2aXR5IiwianRpIjoiNTk5YjMyMGNhMDlhNjcxN2RhYjdiZmIyIn0.kN3DSO2Ppf1o6kbAJ6lkQw_TCSCxIAoWxjc9en2WXNE",
+            "X-Xapp-Token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6IiIsImV4cCI6MTUwNDIwNTUyOCwiaWF0IjoxNTAzNjAwNzI4LCJhdWQiOiI1OTliMzIwYzljMThkYjZmNzlkN2ViNmYiLCJpc3MiOiJHcmF2aXR5IiwianRpIjoiNTk5ZjIwNThjOWRjMjQ1ODBlYzgzMjQzIn0.szUWMDyaIiolURVrVIVvuM60gW43TNmChysLjOLWvTk",
         },
         success: startAjaxBranches, //Function to begin diverging branches of Ajax chain
         error: errorFunction
@@ -110,7 +110,7 @@ function getPaintingArtist(response) {
             "artwork_id": response.id
         },
         headers: {
-            "X-Xapp-Token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6IiIsImV4cCI6MTUwMzk0NzkxNiwiaWF0IjoxNTAzMzQzMTE2LCJhdWQiOiI1OTliMzIwYzljMThkYjZmNzlkN2ViNmYiLCJpc3MiOiJHcmF2aXR5IiwianRpIjoiNTk5YjMyMGNhMDlhNjcxN2RhYjdiZmIyIn0.kN3DSO2Ppf1o6kbAJ6lkQw_TCSCxIAoWxjc9en2WXNE",
+            "X-Xapp-Token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6IiIsImV4cCI6MTUwNDIwNTUyOCwiaWF0IjoxNTAzNjAwNzI4LCJhdWQiOiI1OTliMzIwYzljMThkYjZmNzlkN2ViNmYiLCJpc3MiOiJHcmF2aXR5IiwianRpIjoiNTk5ZjIwNThjOWRjMjQ1ODBlYzgzMjQzIn0.szUWMDyaIiolURVrVIVvuM60gW43TNmChysLjOLWvTk",
         },
         success: getArtistBio, //get artist biography from Wikipedia
         error: errorFunction
