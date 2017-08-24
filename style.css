@@ -33,8 +33,7 @@ button {
     top: 0;
     height: 100%;
     background-image: url(assets/images/witewall_3.png);
-    box-sizing: border-box;
-    box-shadow: 2px 0 10px 1px grey;
+    border: 2px solid antiquewhite;
 }
 
 .gallery_wall_1 {
@@ -54,15 +53,30 @@ button {
 }
 
 .gallery_top {
-    transform: translate3d(0, -49vmin, -49vmin) rotate3d(1, 0, 0, -90deg);
+    transform: translate3d(0, -49vmin, -49vmin) rotate3d(1, 0, 0, 90deg);
     width: 98vmin;
     height: 98vmin;
+    display: flex;
+    justify-content: center;
 }
 
+.textbox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
+}
 
-.gallery_top > div {
-    width: 100%;
-    height: 100%;
+.topRow {
+    display: flex;
+    justify-content: space-between;
+}
+
+.topRow > p {
+    margin: 5px;
+}
+a {
+    color: black;
 }
 
 .gallery_bottom {
@@ -227,6 +241,9 @@ button {
     border: 3px solid grey;
     border-radius: 100%;
     position: fixed;
+}
+
+.previousPainting, .nextPainting {
     top: 50%;
     transform: translateY(-50%);
 }
@@ -239,14 +256,41 @@ button {
     right: 1vmin;
 }
 
+.rotateTop {
+    top: -3vmin;
+    transition: .4s;
+}
+
+.rotateTop:hover {
+    top: 0;
+}
+
+.rotateDown {
+    bottom: -10vmin;
+    transition: .4s;
+}
+
+.rotateDown:hover {
+    bottom: 0vmin;
+}
+
 .arrow {
     position: absolute;
-    transform: translate(-50%, -50%) rotate(45deg);
     border-color: grey;
     border-style: solid;
     height: 40%;
     width: 40%;
+
+}
+
+.leftArrow, .rightArrow {
+    transform: translate(-50%, -50%) rotate(45deg);
     top: 50%;
+}
+
+.topArrow, .downArrow {
+    transform: translate(-50%, -50%) rotate(45deg);
+    left: 50%;
 }
 
 .leftArrow {
@@ -257,6 +301,16 @@ button {
 .rightArrow {
     left: 40%;
     border-width: 3px 3px 0 0;
+}
+
+.topArrow {
+    top: 60%;
+    border-width: 3px 0 0 3px;
+}
+
+.downArrow {
+    border-width: 0 3px 3px 0;
+    top: 40%;
 }
 
 .clickable > div {
