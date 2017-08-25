@@ -137,25 +137,23 @@ a {
     background-position: center;
 }
 
+.nameplate_placard {
+    width: 48%;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
 .nameplate {
     position: absolute;
-    bottom: -160px;
-    background-image: url(assets/images/nameplate.png);
-    height: 70.56%;
-    width: 60%;
-    background-size: contain;
-    display: flex;
+    bottom: -.5vmin;
     text-align: center;
-    align-items: center;
-    justify-content: center;
 }
 
-.nameplate h3 {
-    position: relative;
-    bottom: 3px;
-    left: 4px;
+.nameplate > h3 {
+    font-size: 2vmin;
 }
-
 
 /*Styiling and Positioning for the Google Map*/
 .map_container_div {

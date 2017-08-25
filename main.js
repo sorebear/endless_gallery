@@ -30,7 +30,6 @@ splashPage.artistImage = "assets/images/ourGroup.jpg";
 allPaintings.push(splashPage);
 /**
  * AJAX call to Artsy to receive random artwork with information
- * @param {string} "sample" and requires XAPP token
  * @return {JSON} Paiting image, painting title, painting ID, and gallery name (with conditional to check if empty)
  */
 function getNewPainting(){
@@ -47,7 +46,7 @@ function getNewPainting(){
 }
 /**
  * Function to take in response from initial painting creation call and check for presence of gallery, then start two branching AJAX chains with response as an argument.
- * @param {response}
+ * @param {string} response
  * @return {undefined}
  */
 function startAjaxBranches (response) {
@@ -61,7 +60,8 @@ function startAjaxBranches (response) {
 }
 /**
  * AJAX call to Artsy to recieve Artist name and portrait from the painting ID
- * @param {string} painting ID and XAPP token
+ * @param {string} location - The location of the painting gallery
+ * @param {string} response - painting ID and XAPP token returned from the previous AJAX call
  * @return {JSON} Artist name and artist image
  */
 function getPaintingArtist(location, response) {
@@ -89,7 +89,8 @@ function getPaintingArtist(location, response) {
 
 /**
  * AJAX call to Google Geocoding to show the location of the home gallery
- * @param {string} Home gallery name
+ * @param {string} location - Home gallery name
+ * @param {string} response - the returned data from the previous AJAX call
  * @return {number} Latitude and Longitude of the gallery
  */
 function getGalleryLocation(location, response) {
@@ -108,8 +109,9 @@ function getGalleryLocation(location, response) {
 }
 /**
  * AJAX call to Google Maps to display a map of the painting's housing gallery
- * @param {number} Latitude and Longitude of the housing gallery
- * @return {jQuery Object} jQuery wrapped DOM element to add to container div
+ * @param {number} location - Latitude and Longitude of the housing gallery
+ * @param {string} response - The response from the previous AJAX calls
+ * @return {Object} jQuery wrapped DOM element to add to container div
  */
 function getGalleryMap(location, response){
     allPaintings[location].galleryCoordinates.latitude = response.results[0].geometry.location.lat; //set painting's location latitude
@@ -126,8 +128,9 @@ function getGalleryMap(location, response){
 }
 /**
  * Function to handle Google Map creation for Splash Page outside of Ajax Chain
- * @param lat long
- * @return {jQuery Object} jQuery wrapped DOM element to add to container div
+ * @param lat
+ * @param long
+ * @return {Object} jQuery wrapped DOM element to add to container div
  */
 function getMapElement(lat, long){
     var urlStr = "https://www.google.com/maps/embed/v1/view?key=AIzaSyDWPRK37JSNxBhmLhEbWzCQ57MQBQu8atk&center=" + lat + "," + long + "&zoom=18&maptype=satellite";
@@ -141,7 +144,8 @@ function getMapElement(lat, long){
 }
 /**
  * AJAX call
- * @param {string} Artist's name
+ * @param {string} location - The location of the Painting Gallery
+ * @param {string} response - Artist's name
  * @return {JSON} Artist's short biography from Wikipedia
  */
 function getArtistBio(location, response) {
@@ -175,6 +179,7 @@ function getArtistBio(location, response) {
 /**
  * AJAX call to get artist portrait from wikipedia.
  * @param artist_name
+ * @param location
  */
 function getArtistImage(location, artist_name){
     $.ajax({ //get first passage of Wikipedia of Artist
@@ -197,6 +202,7 @@ function getArtistImage(location, artist_name){
 }
 /**
  * Function to set Painting object's artist image if AJAX call is successful
+ * @param location
  * @param response
  */
 function successArtistImage(location, response){
@@ -211,6 +217,7 @@ function successArtistImage(location, response){
 }
 /**
  * Error handler for artist image Mediawiki AJAX call.
+ * @param location
  * @param response
  */
 function errorArtistImage(location, response){
@@ -412,12 +419,13 @@ function Painting() {
         $(".gallery_wall_" + galleryWallNumber + " .artistName").text(this.artistName); //add artist name to container
         $(".gallery_wall_" + galleryWallNumber + " .artistBio").text(this.artistBiography).scrollTop(0); //add artist bio to container
         $(".gallery_wall_" + galleryWallNumber + " .map_image_div").append(this.paintingMap); //add map to DOM
-        $(".gallery_wall_" + galleryWallNumber + " .nameplate h3").text(firstWordsUnderCharLim(22, this.paintingTitle)); //place truncated title in container
-        $(".gallery_wall_" + galleryWallNumber + " .nameplate h3").attr("title", this.paintingTitle); //set alt text to full title
+        $(".gallery_wall_" + galleryWallNumber + " .nameplate h3").text(firstWordsUnderCharLim(22, this.paintingTitle)).attr("title", this.paintingTitle); //place truncated title in container and set alt text to full title
     };
     /**
      * Method to take in a string and return it with all instances of "x" replaced with "y"
-     * @param {string, string, string}
+     * @param {string} string
+     * @param {string} x
+     * @param {string} y
      * @return {string}
      */
     this.replaceXwithY = function(string, x, y) {
@@ -425,7 +433,8 @@ function Painting() {
     };
     /**
      * Method to take in a url in string format and return it with default image_version placeholder replaced with desired image size
-     * @param {string, string}
+     * @param {string} url
+     * @param {string} size
      * @return {string}
      */
     this.setPaintingSize = function(url, size) {
@@ -456,8 +465,7 @@ function rotateTop() {
         $('.rotateTop').addClass('clickable').on("click", rotateTop);
         $('.rotateDown').addClass('clickable').on("click", rotateDown);
     }, 2000)
-};
-
+}
 
 function openGalleryDoors() {
     $('.leftDoor, .leftDoorGlass').css('animation','openLeft 5s ease-in');
@@ -489,15 +497,16 @@ function rotateDown() {
  * @Param none
  */
 function displayModal() {
+    var $myModal = $("#myModal");
     var url = $("."+arguments[0].currentTarget.parentNode.parentNode.className+" ."+arguments[0].currentTarget.className+" .modalTarget").attr("style"); //find url of nested image in target element
     var firstSubstringIndex = url.indexOf("(")+2; //find ( in url
     var lastSubstringIndex = url.indexOf(")")-1; //find ) in url
     console.log(url.substring(firstSubstringIndex, lastSubstringIndex)); //remove url in parentheses, accounting for quotations marks inside parentheses
     $(".modal-content").attr("src", url.substring(firstSubstringIndex, lastSubstringIndex)); //set modal image to url of target
-    $("#myModal").css("display", "block"); //display modal
-    $("#myModal").on("click", function(){ //on click, remove modal and click handler from modal
-        $("#myModal").css("display", "none");
-        $("#myModal").off();
+    $myModal.css("display", "block"); //display modal
+    $myModal.on("click", function(){ //on click, remove modal and click handler from modal
+        $myModal.css("display", "none");
+        $myModal.off();
     })
 }
 /**
@@ -516,8 +525,7 @@ $(document).ready(function() {
             openGalleryDoors();
             allPaintings[1].populatePage(3);
             allPaintings[2].populatePage(4);
-            $(".nextPainting").addClass('clickable');
-            $(".nextPainting").on("click", nextPainting); //apply click handler for next painting button
+            $(".nextPainting").addClass('clickable').on("click", nextPainting); //apply click handler for next painting button
             $(".painting_container_div").on("click", displayModal);
             $(".artist_container_div").on("click", displayModal);
             clearInterval(timer);
