@@ -9,28 +9,10 @@ var allPaintings = [];
  */
 var currentPainting = 0;
 /**
- * Global Variable to store completed AJAX calls in chain
+ * Global variable to store how many paintings have been completely created
  * @Global {Number}
  */
-var countAjax = 0;
-
-/**
- * Global Variable to store number of paintings to be made currently
- * @Global {Number}
- */
-
-var paintingsRequested = 10;
-
-/**
- * Global Variable that will be interval to check if new paintings are needed
- * @Global {Number}
- */
-var paintingCreationTimer = null;
-/**
- * Global Variable to store if Ajax Call chain is in progress
- * @Global {Number}
- */
-var ajaxChainInProgress = false;
+var completedPaintings = 0;
 /**
  * Global Variable to store information to build initial Splash Page
  * @Global {Object}
@@ -52,7 +34,6 @@ allPaintings.push(splashPage);
  * @return {JSON} Paiting image, painting title, painting ID, and gallery name (with conditional to check if empty)
  */
 function getNewPainting(){
-    ajaxChainInProgress = true; //Denote that Ajax chain has begun
     $.ajax({ //Random artwork lookup
         url: "https://api.artsy.net/api/artworks?sample",
         method: "GET",
@@ -74,25 +55,23 @@ function startAjaxBranches (response) {
         return getNewPainting(); //if not, exit Ajax Chain, and begin new Ajax chain with finding new painting
     }
     var painting = new Painting(); //create painting object to store painting information throughout Ajax call
-    allPaintings.push(painting); //push painting into our painting Array
-    getPaintingArtist(response); //start Ajax Call to get Artist Name and portrait
-    getGalleryLocation(response); //start Ajax call to get Gallery coordinates
+    painting.location = allPaintings.push(painting)-1; //push painting into our painting Array, and remember index of value pushed in using returned length from push
+    getPaintingArtist(painting.location, response); //start Ajax Call to get Artist Name and portrait, passing in location in array and response from first Ajax call
+    getGalleryLocation(painting.location, response); //start Ajax call to get Gallery coordinates, passing in location in array and response from first Ajax call
 }
 /**
  * AJAX call to Artsy to recieve Artist name and portrait from the painting ID
  * @param {string} painting ID and XAPP token
  * @return {JSON} Artist name and artist image
  */
-function getPaintingArtist(response) {
-    ajaxChainInProgress = true;
-    ++countAjax; //increment number of Ajax sub-chains in progress
-    allPaintings[allPaintings.length - 1].paintingID = response.id; //Set Painting ID from intial Ajax response passed down through startAjaxBranches
+function getPaintingArtist(location, response) {
+    allPaintings[location].paintingID = response.id; //Set Painting ID from intial Ajax response passed down through startAjaxBranches
     try{
-        allPaintings[allPaintings.length - 1].paintingTitle = response.title; //try to set painting title to title in response
+        allPaintings[location].paintingTitle = response.title; //try to set painting title to title in response
     } catch(err) {
-        allPaintings[allPaintings.length - 1].paintingTitle = "Untitled"; //if there is no title, set painting title to Untitled
+        allPaintings[location].paintingTitle = "Untitled"; //if there is no title, set painting title to Untitled
     }
-    allPaintings[allPaintings.length - 1].paintingImage = allPaintings[allPaintings.length - 1].setPaintingSize(response._links.image.href, "large"); //set painting image to url from response formatted with painting image size
+    allPaintings[location].paintingImage = allPaintings[location].setPaintingSize(response._links.image.href, "large"); //set painting image to url from response formatted with painting image size
     $.ajax({  //Artist Lookup
         url: "https://api.artsy.net/api/artists",
         method: "GET",
@@ -103,7 +82,7 @@ function getPaintingArtist(response) {
         headers: {
             "X-Xapp-Token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6IiIsImV4cCI6MTUwNDIwNTUyOCwiaWF0IjoxNTAzNjAwNzI4LCJhdWQiOiI1OTliMzIwYzljMThkYjZmNzlkN2ViNmYiLCJpc3MiOiJHcmF2aXR5IiwianRpIjoiNTk5ZjIwNThjOWRjMjQ1ODBlYzgzMjQzIn0.szUWMDyaIiolURVrVIVvuM60gW43TNmChysLjOLWvTk",
         },
-        success: getArtistBio, //get artist biography from Wikipedia
+        success: getArtistBio.bind(this, location), //get artist biography from Wikipedia
         error: errorFunction
     });
 }
@@ -113,19 +92,17 @@ function getPaintingArtist(response) {
  * @param {string} Home gallery name
  * @return {number} Latitude and Longitude of the gallery
  */
-function getGalleryLocation(response) {
-    ajaxChainInProgress = true;
-    ++countAjax;
-    allPaintings[allPaintings.length - 1].paintingGallery = response.collecting_institution;
+function getGalleryLocation(location, response) {
+    allPaintings[location].paintingGallery = response.collecting_institution;
     $.ajax({ //Geocoding API
         url: "https://maps.googleapis.com/maps/api/geocode/json",
         method: "GET",
         dataType: "json",
         data: {
-            address: allPaintings[allPaintings.length - 1].replaceXwithY(allPaintings[allPaintings.length - 1].paintingGallery, " ", "+"),
+            address: allPaintings[location].replaceXwithY(allPaintings[location].paintingGallery, " ", "+"),
             key: "AIzaSyAaECqfgaoi_qM2RBsq8VYAuuFevWg3bhg"
         },
-        success: getGalleryMap, //make Google Map using coordinates
+        success: getGalleryMap.bind(this, location), //make Google Map using coordinates
         error: errorFunction
     });
 }
@@ -134,19 +111,18 @@ function getGalleryLocation(response) {
  * @param {number} Latitude and Longitude of the housing gallery
  * @return {jQuery Object} jQuery wrapped DOM element to add to container div
  */
-function getGalleryMap(response){
-    ajaxChainInProgress = true;
-    allPaintings[allPaintings.length - 1].galleryCoordinates.latitude = response.results[0].geometry.location.lat; //set painting's location latitude
-    allPaintings[allPaintings.length - 1].galleryCoordinates.longitude = response.results[0].geometry.location.lng; //set painting's location longitude
-    var urlStr = "https://www.google.com/maps/embed/v1/view?key=AIzaSyDWPRK37JSNxBhmLhEbWzCQ57MQBQu8atk&center=" + allPaintings[allPaintings.length - 1].galleryCoordinates.latitude + "," + allPaintings[allPaintings.length - 1].galleryCoordinates.longitude + "&zoom=18&maptype=satellite";
+function getGalleryMap(location, response){
+    allPaintings[location].galleryCoordinates.latitude = response.results[0].geometry.location.lat; //set painting's location latitude
+    allPaintings[location].galleryCoordinates.longitude = response.results[0].geometry.location.lng; //set painting's location longitude
+    var urlStr = "https://www.google.com/maps/embed/v1/view?key=AIzaSyDWPRK37JSNxBhmLhEbWzCQ57MQBQu8atk&center=" + allPaintings[location].galleryCoordinates.latitude + "," + allPaintings[location].galleryCoordinates.longitude + "&zoom=18&maptype=satellite";
     var iframeElement = $('<iframe>',{
         frameborder: "0",
         style: "border:0",
         src: urlStr
     });
     iframeElement.css({"width":"100%", "height":"100%"});
-    allPaintings[allPaintings.length - 1].paintingMap = iframeElement; //save map to painting
-    checkForAjaxCompletion();
+    allPaintings[location].paintingMap = iframeElement; //save map to painting
+    checkForAjaxCompletion(location);
 }
 /**
  * Function to handle Google Map creation for Splash Page outside of Ajax Chain
@@ -168,18 +144,17 @@ function getMapElement(lat, long){
  * @param {string} Artist's name
  * @return {JSON} Artist's short biography from Wikipedia
  */
-function getArtistBio(response) {
-    ajaxChainInProgress = true; //Ajax chain is in progress
+function getArtistBio(location, response) {
     try{ //try to set artist image to image in response
-        allPaintings[allPaintings.length - 1].artistImage = allPaintings[allPaintings.length - 1].setPaintingSize(response._embedded.artists[0]._links.image.href, "square");
+        allPaintings[location].artistImage = allPaintings[location].setPaintingSize(response._embedded.artists[0]._links.image.href, "square");
     } catch(err) { //if no image, catch with unknown artist image
-        allPaintings[allPaintings.length - 1].artistImage = "assets/images/unknownArtist.png";
+        allPaintings[location].artistImage = "assets/images/unknownArtist.png";
     }
     try{ //try to set artist name to name in response
-        allPaintings[allPaintings.length - 1].artistName = response._embedded.artists[0].name;
-        getArtistImage(response._embedded.artists[0].name);
+        allPaintings[location].artistName = response._embedded.artists[0].name;
+        getArtistImage(location, response._embedded.artists[0].name);
     } catch(err) { //if no name, catch with Unknown Artist
-        allPaintings[allPaintings.length - 1].artistName = "Unknown Artist";
+        allPaintings[location].artistName = "Unknown Artist";
     }
     $.ajax({ //get first passage of Wikipedia of Artist
         url: "https://en.wikipedia.org/w/api.php",
@@ -187,13 +162,13 @@ function getArtistBio(response) {
         dataType: "jsonp",
         data: {
             action: "query",
-            titles: allPaintings[allPaintings.length - 1].artistName,
+            titles: allPaintings[location].artistName,
             format: "json",
             prop: "extracts",
             exintro: true,
             explaintext: true
         },
-        success: successArtistBio, //handle information returned from Ajax call
+        success: successArtistBio.bind(this, location), //handle information returned from Ajax call
         error: errorFunction
     });
 }
@@ -201,8 +176,7 @@ function getArtistBio(response) {
  * AJAX call to get artist portrait from wikipedia.
  * @param artist_name
  */
-function getArtistImage(artist_name){
-    countAjax++;
+function getArtistImage(location, artist_name){
     $.ajax({ //get first passage of Wikipedia of Artist
         url: "https://en.wikipedia.org/w/api.php",
         method: "GET",
@@ -217,53 +191,53 @@ function getArtistImage(artist_name){
             //exintro: true,
             //explaintext: true
         },
-        success: successArtistImage,
-        error: errorArtistImage
+        success: successArtistImage.bind(this, location),
+        error: errorArtistImage.bind(this, location)
     });
 }
 /**
  * Function to set Painting object's artist image if AJAX call is successful
  * @param response
  */
-function successArtistImage(response){
-
+function successArtistImage(location, response){
     var pagesKeys = Object.keys(response.query.pages);
     try{
-        allPaintings[allPaintings.length - 1].artistImage = response.query.pages[pagesKeys[0]].thumbnail.source;
+        allPaintings[location].artistImage = response.query.pages[pagesKeys[0]].thumbnail.source;
     }
     catch(err){
         console.log(err);
     }
-    checkForAjaxCompletion();
+    checkForAjaxCompletion(location);
 }
 /**
  * Error handler for artist image Mediawiki AJAX call.
  * @param response
  */
-function errorArtistImage(response){
+function errorArtistImage(location, response){
     console.log("Error querying Mediawiki for artist image", response);
-    checkForAjaxCompletion();
+    checkForAjaxCompletion(location);
 }
 /**
  * Function to handle completion of Artist Bio Ajax call
  * @Param response Data returned from Ajax call
  */
-function successArtistBio (response) {
+function successArtistBio (location, response) {
     var pageKey = Object.keys(response.query.pages); //remember key from subobject with randomized name
-    allPaintings[allPaintings.length - 1].artistBiography = response.query.pages[pageKey[0]].extract; //pull information within Object with randomized name using the 0 index of array of keys
-    checkForAjaxCompletion();
+    allPaintings[location].artistBiography = response.query.pages[pageKey[0]].extract; //pull information within Object with randomized name using the 0 index of array of keys
+    checkForAjaxCompletion(location);
 }
 /**
  * Function to check if all Ajax calls have been completed successfully, and change status to "no longer in ajax chain"
  * @Param none
  */
-function checkForAjaxCompletion () {
-    --countAjax; //decrement number of Ajax branches in progress
-    if(countAjax === 0) { //if number of branches in progress is now 0
-        paintingsRequested--; //decrement number of paintings needing to be made
-        console.log(allPaintings[allPaintings.length-1]); //log out created painting
-        ajaxChainInProgress = false; //set ajax chain to no longer in progress
+function checkForAjaxCompletion (location) {
+    for(index in allPaintings[location]){ //check all values in painting being created
+        if(allPaintings[location][index] === null) { //if any value is still null, exit function
+            return;
+        }
     }
+    completedPaintings++;
+    console.log(allPaintings[location]); //log out created painting
 }
 /**
  * Function to handle click on "back" button to see previous painting
@@ -321,7 +295,8 @@ function nextPainting(){
     }
     $galleryColumn.attr('currentFace', (currentFace+1)); //set current face to incremented value of prior value
     reset("gallery_wall_" + faceToChange); //reset gallery wall three spaces forward to remove load time
-    paintingsRequested += 2; //request another painting to be made
+    getNewPainting(); //request for two more paintings to be made
+    getNewPainting();
     currentPainting++;
     allPaintings[currentPainting + 2].populatePage(faceToChange); //populate face that was reset
     setTimeout(function() { //apply click handlers
@@ -533,13 +508,11 @@ $(document).ready(function() {
     allPaintings[0].populatePage(2); //put splash page on face 2
     $('.rotateTop').addClass('clickable').on('click', rotateTop); //apply click handler to rotate top button
     $('.rotateDown').addClass('clickable').on('click', rotateDown); //apply click handler to rotate bottom button
-    paintingCreationTimer = setInterval(function() { //set interval to check if paintings need to be made, and ajax chain is not in progress
-        if(paintingsRequested > 0 && ajaxChainInProgress === false) {
-            getNewPainting();
-        }
-    }, 500);
+    for(var i = 0; i < 10; i++) { //create ten paintings on load
+        getNewPainting();
+    }
     var timer = setInterval(function(){ //populate faces once at least 5 paintings have been created
-        if(allPaintings.length > 4) {
+        if(completedPaintings > 4){
             openGalleryDoors();
             allPaintings[1].populatePage(3);
             allPaintings[2].populatePage(4);
@@ -547,8 +520,8 @@ $(document).ready(function() {
             $(".nextPainting").on("click", nextPainting); //apply click handler for next painting button
             $(".painting_container_div").on("click", displayModal);
             $(".artist_container_div").on("click", displayModal);
-            clearInterval(timer); //clear interval to check if enough paintings have loaded
+            clearInterval(timer);
         }
-    },250);
+    },5000);
     $(".previousPainting").on("click", previousPainting); //apply click handler for previous painting button
 });
