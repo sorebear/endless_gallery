@@ -1,72 +1,165 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>Endless Gallery</title>
+    <link href="https://fonts.googleapis.com/css?family=Lora" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
-    <script>
-        $.ajax({ //Random artwork lookup
-            url: "https://api.artsy.net/api/artworks?sample",
-            method: "GET",
-            dataType: "json",
-            headers: {
-                "X-Xapp-Token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6IiIsImV4cCI6MTUwMzk0NzkxNiwiaWF0IjoxNTAzMzQzMTE2LCJhdWQiOiI1OTliMzIwYzljMThkYjZmNzlkN2ViNmYiLCJpc3MiOiJHcmF2aXR5IiwianRpIjoiNTk5YjMyMGNhMDlhNjcxN2RhYjdiZmIyIn0.kN3DSO2Ppf1o6kbAJ6lkQw_TCSCxIAoWxjc9en2WXNE",
-            },
-            success: successFunction,
-            error: errorFunction
-        });
-
-        $.ajax({  //Artist Lookup
-            url: "https://api.artsy.net/api/artists?sample",
-            method: "GET",
-            dataType: "json",
-            data: {
-                "artwork_id": "516ca55d078b32147800075c"
-            },
-            headers: {
-                "X-Xapp-Token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6IiIsImV4cCI6MTUwMzk0NzkxNiwiaWF0IjoxNTAzMzQzMTE2LCJhdWQiOiI1OTliMzIwYzljMThkYjZmNzlkN2ViNmYiLCJpc3MiOiJHcmF2aXR5IiwianRpIjoiNTk5YjMyMGNhMDlhNjcxN2RhYjdiZmIyIn0.kN3DSO2Ppf1o6kbAJ6lkQw_TCSCxIAoWxjc9en2WXNE",
-            },
-            success: successFunction,
-            error: errorFunction
-        });
-
-        $.ajax({ //Geocoding API
-            url: "https://maps.googleapis.com/maps/api/geocode/json",
-            method: "GET",
-            dataType: "json",
-            data: {
-                address: "The+White+House",
-                key: "AIzaSyAaECqfgaoi_qM2RBsq8VYAuuFevWg3bhg"
-            },
-            success: successFunction,
-            error: errorFunction
-        });
-
-
-        $.ajax({ //get first passage of Wikipedia of Artist
-            url: "https://en.wikipedia.org/w/api.php",
-            method: "GET",
-            dataType: "jsonp",
-            data: {
-                action: "query",
-                titles: "Vincent van Gogh",
-                format: "json",
-                prop: "extracts",
-                exintro: true,
-                explaintext: true
-            },
-            success: successFunction,
-            error: errorFunction
-        });
-
-        function successFunction (response) {
-            console.log(response);
-        }
-        function errorFunction(){
-            console.log("whoops");
-        }
-
-    </script>
+    <script src="main.js"></script>
 </head>
 <body>
+<div class="content_container">
+    <div class="gallery_column" rotation="0" currentFace="2">
+        <div class="gallery_wall_1">
+            <div class="gallery_container_div">
+                <div class="painting_container_div">
+                    <div class="painting_image_container_div">
+                        <div class="painting_image_div modalTarget"></div>
+                    </div>
+                    <div class="painting_frame_div"></div>
+                    <img class="nameplate_placard" src="assets/images/nameplateResized.png">
+                    <div class="nameplate"><h3>Sample Title Extra Cha</h3></div>
+                </div>
+                <div class="map_container_div">
+                    <div class="map_image_div"></div>
+                    <div class="map_frame_div"></div>
+                </div>
+                <div class="artist_container_div">
+                    <div class="artist_image_div modalTarget"></div>
+                    <div class="artist_frame_div"></div>
+                </div>
+                <div class="artist_info_container_div">
+                    <div class="artist_info_text">
+                        <strong><h3 class="artistName"></h3></strong>
+                        <p class="artistBio"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="gallery_wall_2">
+            <div class="gallery_container_div">
+                <div class="painting_container_div">
+                    <div class="painting_image_container_div">
+                        <div class="painting_image_div modalTarget"></div>
+                    </div>
+                    <div class="painting_frame_div"></div>
+                    <img class="nameplate_placard" src="assets/images/nameplateResized.png">
+                    <div class="nameplate"><h3>Sample Title Extra Cha</h3></div>
+                </div>
+                <div class="map_container_div">
+                    <div class="map_image_div"></div>
+                    <div class="map_frame_div"></div>
+                </div>
+                <div class="artist_container_div">
+                    <div class="artist_image_div modalTarget"></div>
+                    <div class="artist_frame_div"></div>
+                </div>
+                <div class="artist_info_container_div">
+                    <div class="artist_info_text">
+                        <strong><h3 class="artistName"></h3></strong>
+                        <p class="artistBio"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="gallery_wall_3">
+            <div class="gallery_container_div">
+                <div class="painting_container_div">
+                    <div class="painting_image_container_div">
+                        <div class="painting_image_div modalTarget"></div>
+                    </div>
+                    <div class="painting_frame_div"></div>
+                    <img class="nameplate_placard" src="assets/images/nameplateResized.png">
+                    <div class="nameplate"><h3>Sample Title Extra Cha</h3></div>
+                </div>
+                <div class="map_container_div">
+                    <div class="map_image_div"></div>
+                    <div class="map_frame_div"></div>
+                </div>
+                <div class="artist_container_div">
+                    <div class="artist_image_div modalTarget"></div>
+                    <div class="artist_frame_div"></div>
+                </div>
+                <div class="artist_info_container_div">
+                    <div class="artist_info_text">
+                        <strong><h3 class="artistName"></h3></strong>
+                        <p class="artistBio"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="gallery_wall_4">
+            <div class="gallery_container_div">
+                <div class="painting_container_div">
+                    <div class="painting_image_container_div">
+                        <div class="painting_image_div modalTarget"></div>
+                    </div>
+                    <div class="painting_frame_div"></div>
+                    <img class="nameplate_placard" src="assets/images/nameplateResized.png">
+                    <div class="nameplate"><h3>Sample Title Extra Cha</h3></div>
+                </div>
+                <div class="map_container_div">
+                    <div class="map_image_div"></div>
+                    <div class="map_frame_div"></div>
+                </div>
+                <div class="artist_container_div">
+                    <div class="artist_image_div modalTarget"></div>
+                    <div class="artist_frame_div"></div>
+                </div>
+                <div class="artist_info_container_div">
+                    <div class="artist_info_text">
+                        <strong><h3 class="artistName"></h3></strong>
+                        <p class="artistBio"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="gallery_top">
+            <div class="textbox">
+            <h2>Thank you for exploring Endless Gallery</h2>
+            <h4>Check out our other work...</h4>
+            <div class="topRow">
+                <p><strong>Grayson Hughes' </strong></p>
+                <p><a href="https://github.com/gtyhughes" target="_blank">GitHub</a></p>
+            </div>
+            <div class="topRow">
+                <p><strong>Cody Miller's </strong></p>
+                <p><a href="https://github.com/LFcMiller" target="_blank">GitHub</a></p>
+            </div>
+            <div class="topRow">
+                <p><strong>Soren Baird's </strong></p>
+                <p><a href="https://github.com/sorebear" target="_blank">GitHub</a></p>
+            </div>
+            </div>
+        </div>
+        <div class="gallery_bottom">
 
+        </div>
+    </div>
+    <div class="button_ctn">
+        <div class="previousPainting buttonDiv">
+            <div class="leftArrow arrow"></div>
+        </div>
+        <div class="nextPainting buttonDiv">
+            <div class="rightArrow arrow"></div>
+        </div>
+        <div class="rotateTop buttonDiv">
+            <div class="topArrow arrow"></div>
+        </div>
+        <div class="rotateDown buttonDiv">
+            <div class="downArrow arrow"></div>
+        </div>
+    </div>
+    <div class="glassDoors">
+        <div class="leftDoorGlass"></div>
+        <img class="leftDoor" src="assets/images/leftDoor.png"/>
+        <div class="rightDoorGlass"></div>
+        <img class="rightDoor" src="assets/images/rightDoor.png"/>
+        <div class="pleaseWaitSign">Please Wait For <br>The Gallery To Open...</div>
+    </div>
+    <div id="myModal" class="modal">
+        <img class="modal-content" id="img01">
+    </div>
+</div>
 </body>
 </html>
